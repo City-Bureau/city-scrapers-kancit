@@ -2,7 +2,7 @@ import os
 
 from .base import *  # noqa
 
-USER_AGENT = "City Scrapers [production mode]. Learn more and say hello at https://citybureau.org/city-scrapers"  # noqa
+USER_AGENT = "City Scrapers [staging mode]. Learn more and say hello at https://citybureau.org/city-scrapers"  # noqa
 
 ITEM_PIPELINES = {
     "city_scrapers_core.pipelines.AzureDiffPipeline": 200,
@@ -13,7 +13,6 @@ ITEM_PIPELINES = {
 SENTRY_DSN = os.getenv("SENTRY_DSN")
 
 EXTENSIONS = {
-    "city_scrapers_core.extensions.AzureBlobStatusExtension": 100,
     "scrapy_sentry_errors.extensions.Errors": 10,
     "scrapy.extensions.closespider.CloseSpider": None,
 }
@@ -31,8 +30,7 @@ FEED_STORAGES = {
 
 AZURE_ACCOUNT_NAME = os.getenv("AZURE_ACCOUNT_NAME")
 AZURE_ACCOUNT_KEY = os.getenv("AZURE_ACCOUNT_KEY")
-AZURE_CONTAINER = os.getenv("AZURE_CONTAINER")
-CITY_SCRAPERS_STATUS_CONTAINER = os.getenv("AZURE_STATUS_CONTAINER")
+AZURE_CONTAINER = os.getenv("AZURE_STAGING_CONTAINER")
 
 FEED_URI = (
     "azure://{account_name}:{account_key}@{container}"

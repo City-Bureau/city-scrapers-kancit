@@ -1,8 +1,6 @@
 from .base import *  # noqa
 
-USER_AGENT = (
-    "City Scrapers [production mode]. Learn more and say hello at cityscrapers.org"
-)
+USER_AGENT = "City Scrapers [archive mode]. Learn more and say hello at https://citybureau.org/city-scrapers"  # noqa
 
 # Configure item pipelines
 ITEM_PIPELINES = {
@@ -11,8 +9,4 @@ ITEM_PIPELINES = {
 
 EXTENSIONS = {
     "scrapy.extensions.closespider.CloseSpider": None,
-}
-
-SPIDER_MIDDLEWARES = {
-    "city_scrapers.middleware.CityScrapersWaybackMiddleware": 500,
 }

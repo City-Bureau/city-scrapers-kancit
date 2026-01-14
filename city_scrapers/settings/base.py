@@ -1,18 +1,12 @@
 import os
 
-# Scrapy settings for city_scrapers project
-#
-# For simplicity, this file contains only settings considered important or
-# commonly used. You can find more settings consulting the documentation:
-#
-#     http://doc.scrapy.org/en/latest/topics/settings.html
-#     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
-#     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
-
 BOT_NAME = "city_scrapers"
 
 SPIDER_MODULES = ["city_scrapers.spiders"]
 NEWSPIDER_MODULE = "city_scrapers.spiders"
+
+# Run environment
+CITY_SCRAPERS_ENV = os.getenv("CITY_SCRAPERS_ENV", "dev")
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = "City Scrapers [development mode]. Learn more and say hello at https://www.citybureau.org/city-scrapers/"  # noqa
@@ -45,7 +39,6 @@ DOWNLOADER_MIDDLEWARES = {
 SPIDER_MIDDLEWARES = {}
 
 # Use commands from city_scrapers_core package
-
 COMMANDS_MODULE = "city_scrapers_core.commands"
 
 EXTENSIONS = {
