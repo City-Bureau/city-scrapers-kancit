@@ -100,6 +100,10 @@ class WycokckMixin(CityScrapersSpider):
         events = data.get("value", [])
 
         for raw_event in events:
+            event_id = raw_event.get("id")
+            if not event_id:
+                continue
+
             meeting = Meeting(
                 title=self._parse_title(raw_event),
                 description=raw_event.get("eventDescription") or "",
@@ -110,7 +114,7 @@ class WycokckMixin(CityScrapersSpider):
                 time_notes="",
                 location=self._parse_location(raw_event),
                 links=self._parse_links(raw_event),
-                source=f"{self.portal_base_url}/event/{raw_event.get('id')}",
+                source=f"{self.portal_base_url}/event/{event_id}",
             )
 
             meeting["status"] = self._get_status(meeting)
