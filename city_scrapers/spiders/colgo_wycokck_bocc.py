@@ -13,8 +13,8 @@ class ColgoWycokckBoccSpider(CityScrapersSpider):
     api_base_url = "https://wycokck.api.civicclerk.com"
     portal_base_url = "https://wycokck.portal.civicclerk.com"
     # Category IDs for Board of Commissioners meetings
-    # 35 = Board of Commissioners, 36 = Board of Commissioners Special Meeting
-    category_filter = "categoryId+in+(35,36)"
+    # 33 = Board of Commissioners Executive Session, 35 = Board of Commissioners, 36 = Board of Commissioners Special Meeting, 37 = Board of Commissioners Work Session
+    category_filter = "categoryId+in+(33,35,36,37)"
 
     def start_requests(self):
         """Generate API requests for past and upcoming events."""
