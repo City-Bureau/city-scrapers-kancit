@@ -1,0 +1,112 @@
+{
+  "value": [
+    {
+      "id": 3001,
+      "eventName": "Full Commission",
+      "eventDescription": "Regular monthly meeting",
+      "startDateTime": "2026-01-15T17:30:00Z",
+      "endDateTime": "2026-01-15T19:30:00Z",
+      "categoryId": 31,
+      "eventLocation": {
+        "id": 1001,
+        "eventId": 0,
+        "address1": "701 N 7th Street",
+        "address2": "Commission Chambers",
+        "city": "Kansas City",
+        "state": "KS",
+        "zipCode": "66101"
+      },
+      "publishedFiles": [
+        {
+          "id": 0,
+          "fileId": 12001,
+          "publishTo": null,
+          "type": "Agenda",
+          "publishOn": "2026-01-13T10:00:00Z",
+          "publishBy": null,
+          "name": "01.15.26 Full Commission Agenda",
+          "url": "stream/WYCOKCK/agenda-12001.pdf",
+          "sort": 1,
+          "fileType": 1,
+          "streamUrl": null
+        },
+        {
+          "id": 0,
+          "fileId": 12002,
+          "publishTo": null,
+          "type": "Agenda Packet",
+          "publishOn": "2026-01-13T10:00:00Z",
+          "publishBy": null,
+          "name": "01.15.26 Full Commission Agenda Packet",
+          "url": "stream/WYCOKCK/packet-12002.pdf",
+          "sort": 2,
+          "fileType": 2,
+          "streamUrl": null
+        }
+      ]
+    },
+    {
+      "id": 3002,
+      "eventName": "Full Commission",
+      "eventDescription": "",
+      "startDateTime": "2026-02-19T17:30:00Z",
+      "endDateTime": null,
+      "categoryId": 31,
+      "eventLocation": {
+        "id": 1002,
+        "eventId": 0,
+        "address1": null,
+        "address2": null,
+        "city": null,
+        "state": null,
+        "zipCode": null
+      },
+      "publishedFiles": []
+    },
+    {
+      "id": 3003,
+      "eventName": "Full Commission",
+      "eventDescription": "",
+      "startDateTime": "2025-12-18T17:30:00Z",
+      "endDateTime": "2025-12-18T19:00:00Z",
+      "categoryId": 31,
+      "eventLocation": {
+        "id": 1003,
+        "eventId": 0,
+        "address1": "701 N 7th Street",
+        "address2": null,
+        "city": "Kansas City",
+        "state": "KS",
+        "zipCode": "66101"
+      },
+      "publishedFiles": [
+        {
+          "id": 0,
+          "fileId": 11800,
+          "publishTo": null,
+          "type": "Agenda",
+          "publishOn": "2025-12-15T10:00:00Z",
+          "publishBy": null,
+          "name": "12.18.25 Full Commission Agenda",
+          "url": "stream/WYCOKCK/agenda-11800.pdf",
+          "sort": 1,
+          "fileType": 1,
+          "streamUrl": null
+        },
+        {
+          "id": 0,
+          "fileId": 11801,
+          "publishTo": null,
+          "type": "Minutes",
+          "publishOn": "2025-12-22T10:00:00Z",
+          "publishBy": null,
+          "name": "12.18.25 Full Commission Minutes",
+          "url": "stream/WYCOKCK/minutes-11801.pdf",
+          "sort": 2,
+          "fileType": 3,
+          "streamUrl": null
+        }
+      ]
+    }
+  ]
+}
