@@ -28,6 +28,7 @@ import scrapy
 from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+from dateutil.relativedelta import relativedelta
 
 
 class WycokckMixin(CityScrapersSpider):
@@ -74,18 +75,28 @@ class WycokckMixin(CityScrapersSpider):
     location_name = "Unified Government of Wyandotte County/Kansas City"
     default_address = "701 N 7th Street, Kansas City, KS 66101"
 
+    # Date range configuration (can be overridden by subclasses)
+    years_back = 3
+    months_ahead = 3
+
     def start_requests(self):
         """Generate API requests for past and upcoming events."""
         today = date.today()
+        start_date = today - relativedelta(years=self.years_back)
+        end_date = today + relativedelta(months=self.months_ahead)
+
+        start_date_str = start_date.isoformat()
+        end_date_str = end_date.isoformat()
         today_str = today.isoformat()
+
         ids_str = ",".join(str(c) for c in self.category_ids)
         category_filter = f"categoryId+in+({ids_str})"
 
         urls = [
-            # Past events up to today
-            f"{self.api_base_url}/v1/Events?$filter=startDateTime+lt+{today_str}+and+{category_filter}&$orderby=startDateTime+desc,+eventName+desc",  # noqa
-            # Upcoming events (today and future)
-            f"{self.api_base_url}/v1/Events?$filter=startDateTime+ge+{today_str}+and+{category_filter}&$orderby=startDateTime+asc,+eventName+asc",  # noqa
+            # Past events (from start_date to today)
+            f"{self.api_base_url}/v1/Events?$filter=startDateTime+ge+{start_date_str}+and+startDateTime+lt+{today_str}+and+{category_filter}&$orderby=startDateTime+desc,+eventName+desc",  # noqa
+            # Upcoming events (today to end_date)
+            f"{self.api_base_url}/v1/Events?$filter=startDateTime+ge+{today_str}+and+startDateTime+le+{end_date_str}+and+{category_filter}&$orderby=startDateTime+asc,+eventName+asc",  # noqa
         ]
         for url in urls:
             yield scrapy.Request(url, callback=self.parse)
