@@ -1,4 +1,4 @@
-from city_scrapers_core.constants import COMMISSION, NOT_CLASSIFIED
+from city_scrapers_core.constants import BOARD, COMMISSION, NOT_CLASSIFIED
 
 from city_scrapers.mixins.wycokck import WycokckMixin
 
@@ -19,4 +19,6 @@ class KancitZoningPlanningSpider(WycokckMixin):
         title_lower = title.lower()
         if "commission" in title_lower:
             return COMMISSION
+        if "board" in title_lower:
+            return BOARD
         return NOT_CLASSIFIED

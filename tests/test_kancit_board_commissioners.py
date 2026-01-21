@@ -103,12 +103,10 @@ def test_location_without_address():
 def test_source():
     """Test that source URLs are correctly generated."""
     assert (
-        parsed_items[0]["source"]
-        == "https://wycokck.portal.civicclerk.com/event/3001"
+        parsed_items[0]["source"] == "https://wycokck.portal.civicclerk.com/event/3001"
     )
     assert (
-        parsed_items[1]["source"]
-        == "https://wycokck.portal.civicclerk.com/event/3002"
+        parsed_items[1]["source"] == "https://wycokck.portal.civicclerk.com/event/3002"
     )
 
 
