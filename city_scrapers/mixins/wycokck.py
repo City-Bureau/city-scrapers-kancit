@@ -11,22 +11,21 @@ Portal Base URL:
     https://wycokck.portal.civicclerk.com
 
 Required class variables (enforced by __init_subclass__):
-    name (str): Spider name/slug (e.g., "kancit_full_commission")
-    agency (str): Full agency name (e.g., "Full Commission")
-    category_id (int): Category ID from CivicClerk API (e.g., 31)
-    classification: Meeting classification constant (e.g., COMMISSION)
+    name (str): Spider name/slug (e.g., "kancit_board_commissioners")
+    agency (str): Full agency name
+    category_ids (list[int]): Category IDs from CivicClerk API (e.g., [31, 33, 35])
 
 Example:
-    class KancitFullCommissionSpider(WycokckMixin):
-        name = "kancit_full_commission"
-        agency = "Full Commission"
-        category_id = 31
-        classification = COMMISSION
+    class KancitBoardCommissionersSpider(WycokckMixin):
+        name = "kancit_board_commissioners"
+        agency = "Board of Commissioners"
+        category_ids = [31, 33, 35, 36, 37]
 """
 
 from datetime import date, datetime
 
 import scrapy
+from city_scrapers_core.constants import BOARD, COMMISSION, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
@@ -41,14 +40,12 @@ class WycokckMixin(CityScrapersSpider):
     # Required to be overridden (enforced by __init_subclass__)
     name = None
     agency = None
-    category_id = None
-    classification = None
+    category_ids = None
 
     _required_vars = [
         "name",
         "agency",
-        "category_id",
-        "classification",
+        "category_ids",
     ]
 
     def __init_subclass__(cls, **kwargs):
@@ -81,7 +78,8 @@ class WycokckMixin(CityScrapersSpider):
         """Generate API requests for past and upcoming events."""
         today = date.today()
         today_str = today.isoformat()
-        category_filter = f"categoryId+eq+{self.category_id}"
+        ids_str = ",".join(str(c) for c in self.category_ids)
+        category_filter = f"categoryId+in+({ids_str})"
 
         urls = [
             # Past events up to today
@@ -104,10 +102,11 @@ class WycokckMixin(CityScrapersSpider):
             if not event_id:
                 continue
 
+            title = self._parse_title(raw_event)
             meeting = Meeting(
-                title=self._parse_title(raw_event),
+                title=title,
                 description=raw_event.get("eventDescription") or "",
-                classification=self.classification,
+                classification=self._parse_classification(title),
                 start=self._parse_start(raw_event),
                 end=self._parse_end(raw_event),
                 all_day=False,
@@ -126,6 +125,13 @@ class WycokckMixin(CityScrapersSpider):
         next_link = data.get("@odata.nextLink")
         if next_link:
             yield scrapy.Request(next_link, callback=self.parse)
+
+    def _parse_classification(self, title):
+        """
+        Parse classification from meeting title.
+        Subclasses should override this method to provide custom classification logic.
+        """
+        return NOT_CLASSIFIED
 
     def _parse_title(self, raw_event):
         """Parse or generate meeting title."""

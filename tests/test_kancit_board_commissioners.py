@@ -6,15 +6,17 @@ from city_scrapers_core.constants import COMMISSION, PASSED, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
-from city_scrapers.spiders.kancit_full_commission import KancitFullCommissionSpider
+from city_scrapers.spiders.kancit_board_commissioners import (
+    KancitBoardCommissionersSpider,
+)
 
 # Load local JSON file for testing
 test_response = file_response(
-    join(dirname(__file__), "files", "kancit_full_commission.json"),
-    url="https://wycokck.api.civicclerk.com/v1/Events?$filter=categoryId+eq+31",
+    join(dirname(__file__), "files", "kancit_board_commissioners.json"),
+    url="https://wycokck.api.civicclerk.com/v1/Events?$filter=categoryId+in+(31,33,35,36,37)",  # noqa
 )
 
-spider = KancitFullCommissionSpider()
+spider = KancitBoardCommissionersSpider()
 
 # Freeze time for consistent test results
 freezer = freeze_time("2026-01-20")
@@ -27,20 +29,22 @@ freezer.stop()
 
 def test_count():
     """Test that all events are parsed."""
-    assert len(parsed_items) == 3
+    assert len(parsed_items) == 4
 
 
 def test_title():
     """Test that titles are correctly parsed."""
     assert parsed_items[0]["title"] == "Full Commission"
-    assert parsed_items[1]["title"] == "Full Commission"
-    assert parsed_items[2]["title"] == "Full Commission"
+    assert parsed_items[1]["title"] == "Board of Commissioners"
+    assert parsed_items[2]["title"] == "Planning & Zoning and Board of Commission"
+    assert parsed_items[3]["title"] == "Board of Commissioners Special Meeting"
 
 
 def test_description():
     """Test that descriptions are correctly parsed."""
     assert parsed_items[0]["description"] == "Regular monthly meeting"
     assert parsed_items[1]["description"] == ""
+    assert parsed_items[3]["description"] == "Special budget meeting"
 
 
 def test_start():
@@ -48,6 +52,7 @@ def test_start():
     assert parsed_items[0]["start"] == datetime(2026, 1, 15, 17, 30)
     assert parsed_items[1]["start"] == datetime(2026, 2, 19, 17, 30)
     assert parsed_items[2]["start"] == datetime(2025, 12, 18, 17, 30)
+    assert parsed_items[3]["start"] == datetime(2026, 1, 22, 14, 0)
 
 
 def test_end():
@@ -55,6 +60,7 @@ def test_end():
     assert parsed_items[0]["end"] == datetime(2026, 1, 15, 19, 30)
     assert parsed_items[1]["end"] is None
     assert parsed_items[2]["end"] == datetime(2025, 12, 18, 19, 0)
+    assert parsed_items[3]["end"] == datetime(2026, 1, 22, 16, 0)
 
 
 def test_time_notes():
@@ -66,18 +72,16 @@ def test_time_notes():
 def test_id():
     """Test that IDs are generated correctly."""
     assert parsed_items[0]["id"] is not None
-    assert "kancit_full_commission" in parsed_items[0]["id"]
+    assert "kancit_board_commissioners" in parsed_items[0]["id"]
 
 
 def test_status():
     """Test that status is correctly determined."""
     # With freeze_time at 2026-01-20:
-    # - Event on 2026-01-15 is passed
-    # - Event on 2026-02-19 is tentative (future)
-    # - Event on 2025-12-18 is passed
     assert parsed_items[0]["status"] == PASSED  # 2026-01-15
     assert parsed_items[1]["status"] == TENTATIVE  # 2026-02-19
     assert parsed_items[2]["status"] == PASSED  # 2025-12-18
+    assert parsed_items[3]["status"] == TENTATIVE  # 2026-01-22
 
 
 def test_location_with_address():
@@ -110,8 +114,8 @@ def test_source():
 
 def test_links():
     """Test that links are correctly parsed."""
-    # First item has two links
-    assert len(parsed_items[0]["links"]) == 2
+    # First item has one link
+    assert len(parsed_items[0]["links"]) == 1
     assert parsed_items[0]["links"][0]["title"] == "Agenda"
     assert (
         parsed_items[0]["links"][0]["href"]
@@ -129,9 +133,15 @@ def test_links():
 
 
 def test_classification():
-    """Test that classification is COMMISSION for all items."""
-    for item in parsed_items:
-        assert item["classification"] == COMMISSION
+    """Test that classification is determined from title."""
+    # "Full Commission" contains "commission" -> COMMISSION
+    assert parsed_items[0]["classification"] == COMMISSION
+    # "Board of Commissioners" contains "commission" -> COMMISSION
+    assert parsed_items[1]["classification"] == COMMISSION
+    # "Planning & Zoning and Board of Commission" contains "commission" -> COMMISSION
+    assert parsed_items[2]["classification"] == COMMISSION
+    # "Board of Commissioners Special Meeting" contains "commission" -> COMMISSION
+    assert parsed_items[3]["classification"] == COMMISSION
 
 
 @pytest.mark.parametrize("item", parsed_items)
