@@ -76,7 +76,9 @@ def create_spiders():
 
             # Add _parse_classification method if function provided
             if classification_func:
-                attrs["_parse_classification"] = lambda self, title, f=classification_func: f(title)  # noqa
+                attrs["_parse_classification"] = (
+                    lambda self, title, f=classification_func: f(title)
+                )  # noqa
 
             # Dynamically create the spider class
             spider_class = type(
