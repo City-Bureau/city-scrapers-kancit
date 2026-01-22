@@ -6,9 +6,7 @@ from city_scrapers_core.constants import COMMISSION, PASSED, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
-from city_scrapers.spiders.kancit_board_commissioners import (
-    KancitBoardCommissionersSpider,
-)
+from city_scrapers.spiders.kancit_wycokck import KancitBoardCommissionersSpider
 
 # Load local JSON file for testing
 test_response = file_response(
