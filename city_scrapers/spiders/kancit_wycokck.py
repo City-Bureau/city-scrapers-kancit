@@ -25,7 +25,8 @@ spider_configs = [
     {
         "class_name": "KancitNeighborhoodDevSpider",
         "name": "kancit_neighborhood_dev",
-        "agency": "Neighborhood & Community Development Standing Committee" + AGENCY_SUFFIX,  # noqa
+        "agency": "Neighborhood & Community Development Standing Committee"
+        + AGENCY_SUFFIX,
         "category_ids": [27],
     },
     # Category 28: Economic Development & Finance Standing Committee
