@@ -1,5 +1,5 @@
 """
-Wyandotte County/Kansas City (WYCOKCK) Mixin for scrapers using CivicClerk API.
+CivicClerk API Mixin for Wyandotte County/Kansas City scrapers.
 
 This mixin scrapes meeting data from the Unified Government of Wyandotte County
 and Kansas City via their CivicClerk API.
@@ -16,7 +16,7 @@ Required class variables (enforced by __init_subclass__):
     category_ids (list[int]): Category IDs from CivicClerk API (e.g., [31, 33, 35])
 
 Example:
-    class KancitBoardCommissionersSpider(WycokckMixin):
+    class KancitBoardCommissionersSpider(CivicClerkMixin):
         name = "kancit_board_commissioners"
         agency = "Board of Commissioners"
         category_ids = [31, 33, 35, 36, 37]
@@ -25,13 +25,13 @@ Example:
 from datetime import date, datetime
 
 import scrapy
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import BOARD, COMMISSION, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from dateutil.relativedelta import relativedelta
 
 
-class WycokckMixin(CityScrapersSpider):
+class CivicClerkMixin(CityScrapersSpider):
     """
     Base mixin class for scraping Wyandotte County/Kansas City meetings.
 
@@ -140,13 +140,23 @@ class WycokckMixin(CityScrapersSpider):
     def _parse_classification(self, title):
         """
         Parse classification from meeting title.
-        Subclasses should override this method to provide custom classification logic.
+        Derives classification based on keywords in the title.
         """
+        title_lower = title.lower()
+        if "committee" in title_lower:
+            return COMMITTEE
+        if "commission" in title_lower:
+            return COMMISSION
+        if "board" in title_lower:
+            return BOARD
         return NOT_CLASSIFIED
 
     def _parse_title(self, raw_event):
-        """Parse or generate meeting title."""
-        return raw_event.get("eventName") or self.agency
+        """Parse or generate meeting title, cleaning up empty parentheses."""
+        title = raw_event.get("eventName") or self.agency
+        # Remove empty parentheses left after cancelled/cancel removal
+        title = title.replace("()", "").strip()
+        return title
 
     def _parse_start(self, raw_event):
         """Parse start datetime as a naive datetime object."""
