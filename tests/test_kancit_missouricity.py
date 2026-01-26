@@ -3,23 +3,24 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import (
-    BOARD,
-    CITY_COUNCIL,
-    COMMISSION,
-    COMMITTEE,
-    NOT_CLASSIFIED,
-    TENTATIVE,
-)
+from city_scrapers_core.constants import CITY_COUNCIL, TENTATIVE
 from freezegun import freeze_time
+from scrapy.http import HtmlResponse, Request
 
-from city_scrapers.spiders.kancit_missouricity import KancitMissouricitySpider
+from city_scrapers.spiders import kancit_missouricity
 
-test_response = []
-with open(join(dirname(__file__), "files", "kancit_missouricity.json"), "r") as f:
+# Get the Council spider from the factory
+KancitCouncilSpider = kancit_missouricity.KancitCouncilSpider
+
+# Load test data
+with open(join(dirname(__file__), "files", "kancit_council.json"), "r") as f:
     test_response = json.load(f)
 
-spider = KancitMissouricitySpider()
+# Load HTML for testing _parse_legistar_events
+with open(join(dirname(__file__), "files", "kancit_missouricity.html"), "r") as f:
+    test_html = f.read()
+
+spider = KancitCouncilSpider()
 
 freezer = freeze_time("2026-01-15")
 freezer.start()
@@ -30,11 +31,11 @@ freezer.stop()
 
 
 def test_count():
-    assert len(parsed_items) == 7
+    assert len(parsed_items) == 3
 
 
 def test_title():
-    assert parsed_items[0]["title"] == "City Council"
+    assert parsed_items[0]["title"] == "Council"
 
 
 def test_description():
@@ -54,7 +55,7 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "kancit_missouricity/202601160900/x/city_council"
+    assert parsed_items[0]["id"] == "kancit_council/202601160900/x/council"
 
 
 def test_status():
@@ -83,41 +84,38 @@ def test_links():
     assert links[2]["title"] == "iCalendar"
 
 
-def test_classification_council():
+def test_classification():
     assert parsed_items[0]["classification"] == CITY_COUNCIL
 
 
-def test_classification_committee():
-    assert parsed_items[1]["classification"] == COMMITTEE
-
-
-def test_classification_board():
-    assert parsed_items[4]["classification"] == BOARD
-
-
-def test_classification_commission():
-    assert parsed_items[5]["classification"] == COMMISSION
-
-
-def test_classification_not_classified():
-    # Business Session doesn't match any classification keywords
-    assert parsed_items[6]["classification"] == NOT_CLASSIFIED
-
-
 def test_virtual_location():
-    # Neighborhood Planning and Development Committee is virtual
-    assert parsed_items[3]["location"]["name"] == "Virtual Meeting"
-    assert parsed_items[3]["location"]["address"] == ""
-
-
-def test_video_link():
-    # Business Session has a video link
-    links = parsed_items[6]["links"]
-    video_links = [link for link in links if link["title"] == "Video"]
-    assert len(video_links) == 1
-    assert video_links[0]["href"] == "https://kansascity.granicus.com/player/clip/1234"
+    # Third item is virtual
+    assert parsed_items[2]["location"]["name"] == "Virtual Meeting"
+    assert parsed_items[2]["location"]["address"] == ""
 
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_all_day(item):
     assert item["all_day"] is False
+
+
+def test_parse_legistar_events_only_gets_calendar():
+    """Test that _parse_legistar_events only parses gridCalendar, not upcoming."""
+    html_spider = KancitCouncilSpider()
+    request = Request(url="https://clerk.kcmo.gov/Calendar.aspx")
+    response = HtmlResponse(
+        url="https://clerk.kcmo.gov/Calendar.aspx",
+        request=request,
+        body=test_html.encode("utf-8"),
+    )
+    events = html_spider._parse_legistar_events(response)
+
+    # HTML has 5 upcoming meetings and 58 calendar meetings
+    # Should only get calendar meetings (58), not upcoming (5)
+    assert len(events) == 58
+
+    # Verify all events have valid Name fields
+    for event in events:
+        name = event.get("Name", {})
+        if isinstance(name, dict):
+            assert name.get("label") is not None

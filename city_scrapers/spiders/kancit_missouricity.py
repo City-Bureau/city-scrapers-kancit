@@ -1,9 +1,3 @@
-import re
-from collections import defaultdict
-from datetime import datetime
-from urllib.parse import urlencode
-
-import scrapy
 from city_scrapers_core.constants import (
     BOARD,
     CITY_COUNCIL,
@@ -11,250 +5,1430 @@ from city_scrapers_core.constants import (
     COMMITTEE,
     NOT_CLASSIFIED,
 )
-from city_scrapers_core.items import Meeting
-from city_scrapers_core.spiders import LegistarSpider
+
+from city_scrapers.mixins.kancit_missouricity import KancitMissouricityMixin
+
+# Configuration for each spider - 199 bodies from Kansas City calendar dropdown
+# Source: https://clerk.kcmo.gov/Calendar.aspx (committee filter dropdown)
+spider_configs = [
+    {
+        "class_name": "Kancit1200MainSouthLoopCommunityImprovementDistrictSpider",
+        "name": "kancit_1200_main_south_loop_community_improveme",
+        "agency": "1200 Main South Loop Community Improvement District",
+        "agency_filter": "1200 Main South Loop Community Improvement District",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "Kancit18thAndVineDevelopmentPolicyCommitteeSpider",
+        "name": "kancit_18th_and_vine_development_policy_committ",
+        "agency": "18th and Vine Development Policy Committee",
+        "agency_filter": "18th and Vine Development Policy Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitAirQualityAppealsBoardSpider",
+        "name": "kancit_air_quality_appeals_board",
+        "agency": "Air Quality Appeals Board",
+        "agency_filter": "Air Quality Appeals Board",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitAirportCommitteeSpider",
+        "name": "kancit_airport_committee",
+        "agency": "Airport Committee",
+        "agency_filter": "Airport Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitAlcoholBeverageAdvisoryBoardSpider",
+        "name": "kancit_alcohol_beverage_advisory_board",
+        "agency": "Alcohol Beverage Advisory Board",
+        "agency_filter": "Alcohol Beverage Advisory Board",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitAlternativesToIncarcerationCommissionSpider",
+        "name": "kancit_alternatives_to_incarceration_commission",
+        "agency": "Alternatives to Incarceration Commission",
+        "agency_filter": "Alternatives to Incarceration Commission",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitArchitectAndEngineeringSelectionCommitteeSpider",
+        "name": "kancit_architect_and_engineering_selection_comm",
+        "agency": "Architect and Engineering Selection Committee",
+        "agency_filter": "Architect and Engineering Selection Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitArterialImpactFeeCommitteeDistrictGSpider",
+        "name": "kancit_arterial_impact_fee_committee_district_g",
+        "agency": "Arterial Impact Fee Committee - District G",
+        "agency_filter": "Arterial Impact Fee Committee - District G",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitArterialStreetImpactFeeAirportDistrictASpider",
+        "name": "kancit_arterial_street_impact_fee_airport_distr",
+        "agency": "Arterial Street Impact Fee Airport District A",
+        "agency_filter": "Arterial Street Impact Fee Airport District A",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitArterialStreetImpactLineCreekDistrictESpider",
+        "name": "kancit_arterial_street_impact_line_creek_distri",
+        "agency": "Arterial Street Impact Line Creek District E",
+        "agency_filter": "Arterial Street Impact Line Creek District E",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitBicycleAndPedestrianAdvisoryCommitteeSpider",
+        "name": "kancit_bicycle_and_pedestrian_advisory_committe",
+        "agency": "Bicycle and Pedestrian Advisory Committee",
+        "agency_filter": "Bicycle and Pedestrian Advisory Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitBoardOfPoliceCommissionersSpider",
+        "name": "kancit_board_of_police_commissioners",
+        "agency": "Board of Police Commissioners",
+        "agency_filter": "Board of Police Commissioners",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitBoardOfTrusteesOfCityTrustsSpider",
+        "name": "kancit_board_of_trustees_of_city_trusts",
+        "agency": "Board of Trustees of City Trusts",
+        "agency_filter": "Board of Trustees of City Trusts",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitBoardOfZoningAdjustmentSpider",
+        "name": "kancit_board_of_zoning_adjustment",
+        "agency": "Board of Zoning Adjustment",
+        "agency_filter": "Board of Zoning Adjustment",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitBondFinancialAdvisoryCommitteeSpider",
+        "name": "kancit_bond_financial_advisory_committee",
+        "agency": "Bond Financial Advisory Committee",
+        "agency_filter": "Bond Financial Advisory Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitBrownfieldsCommissionSpider",
+        "name": "kancit_brownfields_commission",
+        "agency": "Brownfields Commission",
+        "agency_filter": "Brownfields Commission",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitBudgetAndAuditCommitteeSpider",
+        "name": "kancit_budget_and_audit_committee",
+        "agency": "Budget and Audit Committee",
+        "agency_filter": "Budget and Audit Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitBusinessSessionSpider",
+        "name": "kancit_business_session",
+        "agency": "Business Session",
+        "agency_filter": "Business Session",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitCandidateForumMeetingsSpider",
+        "name": "kancit_candidate_forum_meetings",
+        "agency": "Candidate Forum Meeting(s)",
+        "agency_filter": "Candidate Forum Meeting(s)",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitCentralCityEconomicDevelopmentSalesTaxBoardSpider",
+        "name": "kancit_central_city_economic_development_sales",
+        "agency": "Central City Economic Development Sales Tax Board",
+        "agency_filter": "Central City Economic Development Sales Tax Board",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitCharterReviewCommissionSpider",
+        "name": "kancit_charter_review_commission",
+        "agency": "Charter Review Commission",
+        "agency_filter": "Charter Review Commission",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitCitizensCommissionOnMunicipalRevenueSpider",
+        "name": "kancit_citizens_commission_on_municipal_revenue",
+        "agency": "Citizen's Commission on Municipal Revenue",
+        "agency_filter": "Citizen's Commission on Municipal Revenue",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitCityClerkSpider",
+        "name": "kancit_city_clerk",
+        "agency": "City Clerk",
+        "agency_filter": "City Clerk",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitCityCouncilBusinessSessionSpider",
+        "name": "kancit_city_council_business_session",
+        "agency": "City Council Business Session",
+        "agency_filter": "City Council Business Session",
+        "classification": CITY_COUNCIL,
+    },
+    {
+        "class_name": "KancitCityMarketOversightCommitteeSpider",
+        "name": "kancit_city_market_oversight_committee",
+        "agency": "City Market Oversight Committee",
+        "agency_filter": "City Market Oversight Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitCityOperationsCommitteeSpider",
+        "name": "kancit_city_operations_committee",
+        "agency": "City Operations Committee",
+        "agency_filter": "City Operations Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitCityPlanCommissionSpider",
+        "name": "kancit_city_plan_commission",
+        "agency": "City Plan Commission",
+        "agency_filter": "City Plan Commission",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitCitysRiskManagementCommitteesClaimsSubcommitteeSpider",
+        "name": "kancit_citys_risk_management_committees_claims",
+        "agency": "City's Risk Management Committee's Claims Subcommittee",
+        "agency_filter": "City's Risk Management Committee's Claims Subcommittee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitCivilRightsAndEqualOpportunityCreoDepartmentSpider",
+        "name": "kancit_civil_rights_and_equal_opportunity_creo",
+        "agency": "Civil Rights and Equal Opportunity (CREO) Department",
+        "agency_filter": "Civil Rights and Equal Opportunity (CREO) Department",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitCommunityEngagementSpider",
+        "name": "kancit_community_engagement",
+        "agency": "Community Engagement",
+        "agency_filter": "Community Engagement",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitConstructionWorkforceBoardSpider",
+        "name": "kancit_construction_workforce_board",
+        "agency": "Construction Workforce Board",
+        "agency_filter": "Construction Workforce Board",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitConventionHotelSteeringCommitteeSpider",
+        "name": "kancit_convention_hotel_steering_committee",
+        "agency": "Convention Hotel Steering Committee",
+        "agency_filter": "Convention Hotel Steering Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitConventionManagementAdvisoryAuthoritySpider",
+        "name": "kancit_convention_management_advisory_authority",
+        "agency": "Convention Management Advisory Authority",
+        "agency_filter": "Convention Management Advisory Authority",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitCouncilSpider",
+        "name": "kancit_council",
+        "agency": "Council",
+        "agency_filter": "Council",
+        "classification": CITY_COUNCIL,
+    },
+    {
+        "class_name": "KancitCrossroadsArtsAdvisoryCommitteePieaSpider",
+        "name": "kancit_crossroads_arts_advisory_committee_piea",
+        "agency": "Crossroads Arts Advisory Committee PIEA",
+        "agency_filter": "Crossroads Arts Advisory Committee PIEA",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitCrossroadsCommunityImprovementDistrictSpider",
+        "name": "kancit_crossroads_community_improvement_distric",
+        "agency": "Crossroads Community Improvement District",
+        "agency_filter": "Crossroads Community Improvement District",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitDeferredCompensationPlanBoardSpider",
+        "name": "kancit_deferred_compensation_plan_board",
+        "agency": "Deferred Compensation Plan Board",
+        "agency_filter": "Deferred Compensation Plan Board",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitDogParkMasterPlanTaskForceSpider",
+        "name": "kancit_dog_park_master_plan_task_force",
+        "agency": "Dog Park Master Plan Task Force",
+        "agency_filter": "Dog Park Master Plan Task Force",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitDowntownEconomicStimulusAuthoritySpider",
+        "name": "kancit_downtown_economic_stimulus_authority",
+        "agency": "Downtown Economic Stimulus Authority",
+        "agency_filter": "Downtown Economic Stimulus Authority",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitDowntownTransportationDevelopmentDistrictTddSpider",
+        "name": "kancit_downtown_transportation_development_dist",
+        "agency": "Downtown Transportation Development District (TDD)",
+        "agency_filter": "Downtown Transportation Development District (TDD)",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitEconomicDevelopmentCommitteeSpider",
+        "name": "kancit_economic_development_committee",
+        "agency": "Economic Development Committee",
+        "agency_filter": "Economic Development Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitEconomicDevelopmentCorporationSpider",
+        "name": "kancit_economic_development_corporation",
+        "agency": "Economic Development Corporation",
+        "agency_filter": "Economic Development Corporation",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitEconomicDevelopmentCorporationBoardOfDirectorsSpider",
+        "name": "kancit_economic_development_corporation_board_o",
+        "agency": "Economic Development Corporation Board of Directors",
+        "agency_filter": "Economic Development Corporation Board of Directors",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitEmergencyMedicalServicesCoordinatingCommitteeSpider",
+        "name": "kancit_emergency_medical_services_coordinating",
+        "agency": "Emergency Medical Services Coordinating Committee",
+        "agency_filter": "Emergency Medical Services Coordinating Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitEmergencyMedicalServicesCoordinationCommitteeEmsccSpider",
+        "name": "kancit_emergency_medical_services_coordination",
+        "agency": "Emergency Medical Services Coordination Committee (EMSCC)",
+        "agency_filter": "Emergency Medical Services Coordination Committee (EMSCC)",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitEmergingTechnologyBoardSpider",
+        "name": "kancit_emerging_technology_board",
+        "agency": "Emerging Technology Board",
+        "agency_filter": "Emerging Technology Board",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitEmployeeRetirementSystemBoardOfTrusteesSpider",
+        "name": "kancit_employee_retirement_system_board_of_trus",
+        "agency": "Employee Retirement System Board of Trustees",
+        "agency_filter": "Employee Retirement System Board of Trustees",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitEmployeesRetirementSystemBoardOfTrusteesSpider",
+        "name": "kancit_employees_retirement_system_board_of_tru",
+        "agency": "Employees Retirement System Board of Trustees",
+        "agency_filter": "Employees Retirement System Board of Trustees",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitEnvironmentalManagementCommissionSpider",
+        "name": "kancit_environmental_management_commission",
+        "agency": "Environmental Management Commission",
+        "agency_filter": "Environmental Management Commission",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitEpaResponseTeamSpider",
+        "name": "kancit_epa_response_team",
+        "agency": "EPA Response Team",
+        "agency_filter": "EPA Response Team",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitEquityTaskForceSpider",
+        "name": "kancit_equity_task_force",
+        "agency": "Equity Task Force",
+        "agency_filter": "Equity Task Force",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitEthicsAndLegalReviewCommitteeSpider",
+        "name": "kancit_ethics_and_legal_review_committee",
+        "agency": "Ethics and Legal Review Committee",
+        "agency_filter": "Ethics and Legal Review Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitFGAndTIJointCommitteeSpider",
+        "name": "kancit_f_g_and_t_i_joint_committee",
+        "agency": "F & G and T & I Joint Committee",
+        "agency_filter": "F & G and T & I Joint Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitFairnessInConstructionBoardSpider",
+        "name": "kancit_fairness_in_construction_board",
+        "agency": "Fairness in Construction Board",
+        "agency_filter": "Fairness in Construction Board",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitFairnessInProfessionalGoodsServicesBoardSpider",
+        "name": "kancit_fairness_in_professional_goods_services",
+        "agency": "Fairness In Professional Goods & Services Board",
+        "agency_filter": "Fairness In Professional Goods & Services Board",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitFinanceAdministrationCommitteeSpider",
+        "name": "kancit_finance_administration_committee",
+        "agency": "Finance & Administration Committee",
+        "agency_filter": "Finance & Administration Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitFinanceAndAuditCommitteeSpider",
+        "name": "kancit_finance_and_audit_committee",
+        "agency": "Finance and Audit Committee",
+        "agency_filter": "Finance and Audit Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitFinanceAndGovernanceCommitteeSpider",
+        "name": "kancit_finance_and_governance_committee",
+        "agency": "Finance and Governance Committee",
+        "agency_filter": "Finance and Governance Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitFinanceGovernanceEthicsWorkSessionSpider",
+        "name": "kancit_finance_governance_ethics_work_session",
+        "agency": "Finance Governance &  Ethics  Work Session",
+        "agency_filter": "Finance Governance &  Ethics  Work Session",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitFinanceGovernanceEthicsCommitteeSpider",
+        "name": "kancit_finance_governance_ethics_committee",
+        "agency": "Finance, Governance & Ethics Committee",
+        "agency_filter": "Finance, Governance & Ethics Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitFinanceGovernanceNeighborhoodsJointCommitteeSpider",
+        "name": "kancit_finance_governance_neighborhoods_joint_c",
+        "agency": "Finance, Governance & Neighborhoods Joint Committee",
+        "agency_filter": "Finance, Governance & Neighborhoods Joint Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitFinanceGovernanceAndEthicsCommitteeAndPublicSafetyAndEmergencyServicesCommitteeSpider",  # noqa: E501
+        "name": "kancit_finance_governance_and_ethics_committee",
+        "agency": "Finance, Governance and Ethics Committee and Public Safety and Emergency Services Committee",  # noqa: E501
+        "agency_filter": "Finance, Governance and Ethics Committee and Public Safety and Emergency Services Committee",  # noqa: E501
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitFinanceGovernanceAndPublicSafetyCommitteeSpider",
+        "name": "kancit_finance_governance_and_public_safety_com",
+        "agency": "Finance, Governance and Public Safety Committee",
+        "agency_filter": "Finance, Governance and Public Safety Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitFirefightersPensionSystemBoardOfTrusteesSpider",
+        "name": "kancit_firefighters_pension_system_board_of_tru",
+        "agency": "Firefighters Pension System Board of Trustees",
+        "agency_filter": "Firefighters Pension System Board of Trustees",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitFocusedDeterrenceGoverningBoardSpider",
+        "name": "kancit_focused_deterrence_governing_board",
+        "agency": "Focused Deterrence Governing Board",
+        "agency_filter": "Focused Deterrence Governing Board",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitHealthCommissionSpider",
+        "name": "kancit_health_commission",
+        "agency": "Health Commission",
+        "agency_filter": "Health Commission",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitHealthFowardFoundationCommunityAdvisoryCommitteeSpider",
+        "name": "kancit_health_foward_foundation_community_advis",
+        "agency": "Health Foward Foundation - Community Advisory Committee",
+        "agency_filter": "Health Foward Foundation - Community Advisory Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitHealthcareSystemBoardOfTrusteesSpider",
+        "name": "kancit_healthcare_system_board_of_trustees",
+        "agency": "Healthcare System Board of Trustees",
+        "agency_filter": "Healthcare System Board of Trustees",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitHistoricPreservationCommissionSpider",
+        "name": "kancit_historic_preservation_commission",
+        "agency": "Historic Preservation Commission",
+        "agency_filter": "Historic Preservation Commission",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitHomelesstaskForceSpider",
+        "name": "kancit_homelesstask_force",
+        "agency": "HomelessTask Force",
+        "agency_filter": "HomelessTask Force",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitHomesteadingAuthoritySpider",
+        "name": "kancit_homesteading_authority",
+        "agency": "Homesteading Authority",
+        "agency_filter": "Homesteading Authority",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitHouselessTaskforceSpider",
+        "name": "kancit_houseless_taskforce",
+        "agency": "Houseless Taskforce",
+        "agency_filter": "Houseless Taskforce",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitHousingCommunityDevelopmentCommitteeSpider",
+        "name": "kancit_housing_community_development_committee",
+        "agency": "Housing & Community Development Committee",
+        "agency_filter": "Housing & Community Development Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitHousingAndPlanningZoningEconomicDevelopmentCommitteeSpider",  # noqa: E501
+        "name": "kancit_housing_and_planning_zoning_economic_dev",
+        "agency": "Housing and Planning, Zoning & Economic Development Committee",
+        "agency_filter": "Housing and Planning, Zoning & Economic Development Committee",  # noqa: E501
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitHousingAuthoritySpider",
+        "name": "kancit_housing_authority",
+        "agency": "Housing Authority",
+        "agency_filter": "Housing Authority",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitHousingCommitteeSpider",
+        "name": "kancit_housing_committee",
+        "agency": "Housing Committee",
+        "agency_filter": "Housing Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitHousingCommitteeWorksessionSpider",
+        "name": "kancit_housing_committee_worksession",
+        "agency": "Housing Committee Worksession",
+        "agency_filter": "Housing Committee Worksession",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitHousingTrustFundBoardSpider",
+        "name": "kancit_housing_trust_fund_board",
+        "agency": "Housing Trust Fund Board",
+        "agency_filter": "Housing Trust Fund Board",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitHumanRelationsSpider",
+        "name": "kancit_human_relations",
+        "agency": "Human Relations",
+        "agency_filter": "Human Relations",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitHumanRightsCommissionSpider",
+        "name": "kancit_human_rights_commission",
+        "agency": "Human Rights Commission",
+        "agency_filter": "Human Rights Commission",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitIndependenceAvenueSpecialDesignReviewDistrictsSpider",
+        "name": "kancit_independence_avenue_special_design_revie",
+        "agency": "Independence Avenue Special Design Review Districts",
+        "agency_filter": "Independence Avenue Special Design Review Districts",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitInternationalCommitteeSpider",
+        "name": "kancit_international_committee",
+        "agency": "International Committee",
+        "agency_filter": "International Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitInternationalEnergyConservationCodeSpider",
+        "name": "kancit_international_energy_conservation_code",
+        "agency": "International Energy Conservation Code",
+        "agency_filter": "International Energy Conservation Code",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitInvestmentCommitteeSpider",
+        "name": "kancit_investment_committee",
+        "agency": "Investment Committee",
+        "agency_filter": "Investment Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitJacksonCountyBoardOfEqualizationSpider",
+        "name": "kancit_jackson_county_board_of_equalization",
+        "agency": "Jackson County Board of Equalization",
+        "agency_filter": "Jackson County Board of Equalization",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitJazzDistrictRedevelopmentCorpSpider",
+        "name": "kancit_jazz_district_redevelopment_corp",
+        "agency": "Jazz District Redevelopment Corp.",
+        "agency_filter": "Jazz District Redevelopment Corp.",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitJointCommitteeOfFinanceAndSpecialCommitteeOnHousingPolicySpider",  # noqa: E501
+        "name": "kancit_joint_committee_of_finance_and_special_c",
+        "agency": "Joint Committee of Finance and Special Committee on Housing Policy",
+        "agency_filter": "Joint Committee of Finance and Special Committee on Housing Policy",  # noqa: E501
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitKansasCityBoardOfElectionCommissionersSpider",
+        "name": "kancit_kansas_city_board_of_election_commission",
+        "agency": "Kansas City Board of Election Commissioners",
+        "agency_filter": "Kansas City Board of Election Commissioners",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitKansasCityClimateProtectionPlanSteeringCommitteeSpider",
+        "name": "kancit_kansas_city_climate_protection_plan_stee",
+        "agency": "Kansas City Climate Protection Plan Steering Committee",
+        "agency_filter": "Kansas City Climate Protection Plan Steering Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitKansasCityClimateProtectionSteeringCommitteeSpider",
+        "name": "kancit_kansas_city_climate_protection_steering",
+        "agency": "Kansas City Climate Protection Steering Committee",
+        "agency_filter": "Kansas City Climate Protection Steering Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitKansasCityCommissionOnViolentCrimeSpider",
+        "name": "kancit_kansas_city_commission_on_violent_crime",
+        "agency": "Kansas City Commission on Violent Crime",
+        "agency_filter": "Kansas City Commission on Violent Crime",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitKansasCityCovid19VaccineTaskForceSpider",
+        "name": "kancit_kansas_city_covid_19_vaccine_task_force",
+        "agency": "Kansas City COVID-19 Vaccine Task Force",
+        "agency_filter": "Kansas City COVID-19 Vaccine Task Force",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitKansasCityMaintenanceReserveCorporationSpider",
+        "name": "kancit_kansas_city_maintenance_reserve_corporat",
+        "agency": "Kansas City Maintenance Reserve Corporation",
+        "agency_filter": "Kansas City Maintenance Reserve Corporation",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitKansasCityMissouriParkingAndTransportationCommissionSpider",  # noqa: E501
+        "name": "kancit_kansas_city_missouri_parking_and_transpo",
+        "agency": "Kansas City Missouri Parking and Transportation Commission",
+        "agency_filter": "Kansas City Missouri Parking and Transportation Commission",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitKansasCityMuseumFoundationBoardSpider",
+        "name": "kancit_kansas_city_museum_foundation_board",
+        "agency": "Kansas City Museum Foundation Board",
+        "agency_filter": "Kansas City Museum Foundation Board",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitKansasCityRedistrictingCommissionSpider",
+        "name": "kancit_kansas_city_redistricting_commission",
+        "agency": "Kansas City Redistricting Commission",
+        "agency_filter": "Kansas City Redistricting Commission",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitKansasCityStreetcarAuthoritySpider",
+        "name": "kancit_kansas_city_streetcar_authority",
+        "agency": "Kansas City Streetcar Authority",
+        "agency_filter": "Kansas City Streetcar Authority",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitKansasCityWorkersCompensationBoardSpider",
+        "name": "kancit_kansas_city_workers_compensation_board",
+        "agency": "Kansas City Workers' Compensation Board",
+        "agency_filter": "Kansas City Workers' Compensation Board",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitKansasCityYoungAdultCityCouncilSpider",
+        "name": "kancit_kansas_city_young_adult_city_council",
+        "agency": "Kansas City Young Adult City Council",
+        "agency_filter": "Kansas City Young Adult City Council",
+        "classification": CITY_COUNCIL,
+    },
+    {
+        "class_name": "KancitKansasCityMissouriHomesteadingAuthoritySpider",
+        "name": "kancit_kansas_city_missouri_homesteading_author",
+        "agency": "Kansas City, Missouri Homesteading Authority",
+        "agency_filter": "Kansas City, Missouri Homesteading Authority",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitKcDowntownStreetcarTransportationDevelopmentDistrictSpider",  # noqa: E501
+        "name": "kancit_kc_downtown_streetcar_transportation_dev",
+        "agency": "KC Downtown Streetcar Transportation Development District",
+        "agency_filter": "KC Downtown Streetcar Transportation Development District",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitKcNeighborhoodAdvisoryCouncilSpider",
+        "name": "kancit_kc_neighborhood_advisory_council",
+        "agency": "KC Neighborhood Advisory Council",
+        "agency_filter": "KC Neighborhood Advisory Council",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitKcParkingAndTransportationCommissionSpider",
+        "name": "kancit_kc_parking_and_transportation_commission",
+        "agency": "KC Parking and Transportation Commission",
+        "agency_filter": "KC Parking and Transportation Commission",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitKcStatSpider",
+        "name": "kancit_kc_stat",
+        "agency": "KC STAT",
+        "agency_filter": "KC STAT",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitKcWaterIntegratedPlanAdvisoryCommitteeSpider",
+        "name": "kancit_kc_water_integrated_plan_advisory_commit",
+        "agency": "KC Water Integrated Plan Advisory Committee",
+        "agency_filter": "KC Water Integrated Plan Advisory Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitKcYouthCommissionSpider",
+        "name": "kancit_kc_youth_commission",
+        "agency": "KC Youth Commission",
+        "agency_filter": "KC Youth Commission",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitKcataSpider",
+        "name": "kancit_kcata",
+        "agency": "KCATA",
+        "agency_filter": "KCATA",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitKcataFundingReviewCommitteeSpider",
+        "name": "kancit_kcata_funding_review_committee",
+        "agency": "KCATA Funding Review Committee",
+        "agency_filter": "KCATA Funding Review Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitKciAirportCommunityImprovementDistrictBoardSpider",
+        "name": "kancit_kci_airport_community_improvement_distri",
+        "agency": "KCI Airport Community Improvement District Board",
+        "agency_filter": "KCI Airport Community Improvement District Board",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitKctgaComprehensiveHivPreventionCarePlanSpider",
+        "name": "kancit_kctga_comprehensive_hiv_prevention_care",
+        "agency": "KCTGA Comprehensive HIV Prevention & Care Plan",
+        "agency_filter": "KCTGA Comprehensive HIV Prevention & Care Plan",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitLandBankAgencySpider",
+        "name": "kancit_land_bank_agency",
+        "agency": "Land Bank Agency",
+        "agency_filter": "Land Bank Agency",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitLandBankBoardOfCommissionersSpider",
+        "name": "kancit_land_bank_board_of_commissioners",
+        "agency": "Land Bank Board of Commissioners",
+        "agency_filter": "Land Bank Board of Commissioners",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitLandmarksHistoricTrustCorporationSpider",
+        "name": "kancit_landmarks_historic_trust_corporation",
+        "agency": "Landmarks Historic Trust Corporation",
+        "agency_filter": "Landmarks Historic Trust Corporation",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitLegalReviewCommitteeSpider",
+        "name": "kancit_legal_review_committee",
+        "agency": "Legal Review Committee",
+        "agency_filter": "Legal Review Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitLegislativeCommitteeSpider",
+        "name": "kancit_legislative_committee",
+        "agency": "Legislative Committee",
+        "agency_filter": "Legislative Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitLegislativeRulesAndEthicsCommitteeSpider",
+        "name": "kancit_legislative_rules_and_ethics_committee",
+        "agency": "Legislative, Rules and Ethics Committee",
+        "agency_filter": "Legislative, Rules and Ethics Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitLgbtqCommissionSpider",
+        "name": "kancit_lgbtq_commission",
+        "agency": "LGBTQ Commission",
+        "agency_filter": "LGBTQ Commission",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitLienWaiverCommitteeSpider",
+        "name": "kancit_lien_waiver_committee",
+        "agency": "Lien Waiver Committee",
+        "agency_filter": "Lien Waiver Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitLinwoodShoppingCenterCidBoardOfDirectorsMeetingSpider",
+        "name": "kancit_linwood_shopping_center_cid_board_of_dir",
+        "agency": "Linwood Shopping Center CID Board of Director's Meeting",
+        "agency_filter": "Linwood Shopping Center CID Board of Director's Meeting",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitLinwoodShoppingCenterCommunityImprovementDistrictSpider",
+        "name": "kancit_linwood_shopping_center_community_improv",
+        "agency": "Linwood Shopping Center Community Improvement District",
+        "agency_filter": "Linwood Shopping Center Community Improvement District",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitLiquorControlBoardOfReviewSpider",
+        "name": "kancit_liquor_control_board_of_review",
+        "agency": "Liquor Control Board of Review",
+        "agency_filter": "Liquor Control Board of Review",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitMainStreetRailTransportationDevelopmentDistrictSpider",
+        "name": "kancit_main_street_rail_transportation_developm",
+        "agency": "Main Street Rail Transportation Development District",
+        "agency_filter": "Main Street Rail Transportation Development District",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitMayorsCommissionForNewAmericansSpider",
+        "name": "kancit_mayors_commission_for_new_americans",
+        "agency": "Mayor's Commission for New Americans",
+        "agency_filter": "Mayor's Commission for New Americans",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitMayorsCommissionOnReparationsCommitteeSpider",
+        "name": "kancit_mayors_commission_on_reparations_committ",
+        "agency": "Mayor's Commission on Reparations Committee",
+        "agency_filter": "Mayor's Commission on Reparations Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitMayorsNewToolsTaskForceBoardSpider",
+        "name": "kancit_mayors_new_tools_task_force_board",
+        "agency": "Mayor's New Tools Task Force Board",
+        "agency_filter": "Mayor's New Tools Task Force Board",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitMetroNorthCrossingCommunityImprovementDistrictSpider",
+        "name": "kancit_metro_north_crossing_community_improveme",
+        "agency": "Metro North Crossing Community Improvement District",
+        "agency_filter": "Metro North Crossing Community Improvement District",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitMidtownHousingAdvisoryBoardSpider",
+        "name": "kancit_midtown_housing_advisory_board",
+        "agency": "Midtown Housing Advisory Board",
+        "agency_filter": "Midtown Housing Advisory Board",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitMunicipalArtCommissionSpider",
+        "name": "kancit_municipal_art_commission",
+        "agency": "Municipal Art Commission",
+        "agency_filter": "Municipal Art Commission",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitMunicipalJudicialNominatingCommissionSpider",
+        "name": "kancit_municipal_judicial_nominating_commission",
+        "agency": "Municipal Judicial Nominating Commission",
+        "agency_filter": "Municipal Judicial Nominating Commission",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitMunicipalOfficialsAndOfficersEthicsCommissionSpider",
+        "name": "kancit_municipal_officials_and_officers_ethics",
+        "agency": "Municipal Officials and Officers Ethics Commission",
+        "agency_filter": "Municipal Officials and Officers Ethics Commission",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitNeighborhoodAndHousingJointCommitteeSpider",
+        "name": "kancit_neighborhood_and_housing_joint_committee",
+        "agency": "Neighborhood and Housing Joint Committee",
+        "agency_filter": "Neighborhood and Housing Joint Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitNeighborhoodDevelopmentAndHousingCommitteeSpider",
+        "name": "kancit_neighborhood_development_and_housing_com",
+        "agency": "Neighborhood Development and Housing Committee",
+        "agency_filter": "Neighborhood Development and Housing Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitNeighborhoodDevelopmentCommitteeSpider",
+        "name": "kancit_neighborhood_development_committee",
+        "agency": "Neighborhood Development Committee",
+        "agency_filter": "Neighborhood Development Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitNeighborhoodPlanningAndDevelopmentCommitteeSpider",
+        "name": "kancit_neighborhood_planning_and_development_co",
+        "agency": "Neighborhood Planning and Development Committee",
+        "agency_filter": "Neighborhood Planning and Development Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitNeighborhoodProgramAdvisoryCommitteeSpider",
+        "name": "kancit_neighborhood_program_advisory_committee",
+        "agency": "Neighborhood Program Advisory Committee",
+        "agency_filter": "Neighborhood Program Advisory Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitNeighborhoodTouristDevelopmentFundSpider",
+        "name": "kancit_neighborhood_tourist_development_fund",
+        "agency": "Neighborhood Tourist Development Fund",
+        "agency_filter": "Neighborhood Tourist Development Fund",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitNeighborhoodTouristDevelopmentFundNtdfSpider",
+        "name": "kancit_neighborhood_tourist_development_fund_nt",
+        "agency": "Neighborhood Tourist Development Fund (NTDF)",
+        "agency_filter": "Neighborhood Tourist Development Fund (NTDF)",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitNeighborhoodsAndPublicSafetyHousingJointCommitteeSpider",
+        "name": "kancit_neighborhoods_and_public_safety_housing",
+        "agency": "Neighborhoods and Public Safety & Housing Joint Committee",
+        "agency_filter": "Neighborhoods and Public Safety & Housing Joint Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitNeighborhoodsAndPublicSafetyCommitteeSpider",
+        "name": "kancit_neighborhoods_and_public_safety_committe",
+        "agency": "Neighborhoods and Public Safety Committee",
+        "agency_filter": "Neighborhoods and Public Safety Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitNeighborhoodsHousingHealthyCommunitiesCommitteeSpider",
+        "name": "kancit_neighborhoods_housing_healthy_communitie",
+        "agency": "Neighborhoods, Housing & Healthy Communities Committee",
+        "agency_filter": "Neighborhoods, Housing & Healthy Communities Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitNorthlandGatewayCommunityImprovementDistrictSpider",
+        "name": "kancit_northland_gateway_community_improvement",
+        "agency": "Northland Gateway Community Improvement District",
+        "agency_filter": "Northland Gateway Community Improvement District",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitNpdAndSpecialCommitteeOnHousingPolicyCommitteeSpider",
+        "name": "kancit_npd_and_special_committee_on_housing_pol",
+        "agency": "NPD and Special Committee on Housing Policy Committee",
+        "agency_filter": "NPD and Special Committee on Housing Policy Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitOperationsAndAviationSpider",
+        "name": "kancit_operations_and_aviation",
+        "agency": "Operations And Aviation",
+        "agency_filter": "Operations And Aviation",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitOperationsCommitteeSpider",
+        "name": "kancit_operations_committee",
+        "agency": "Operations Committee",
+        "agency_filter": "Operations Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitParkingAndTransportationCommissionSpider",
+        "name": "kancit_parking_and_transportation_commission",
+        "agency": "Parking and Transportation Commission",
+        "agency_filter": "Parking and Transportation Commission",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitParkingPolicyReviewBoardSpider",
+        "name": "kancit_parking_policy_review_board",
+        "agency": "Parking Policy Review Board",
+        "agency_filter": "Parking Policy Review Board",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitParksRecreationBoardOfCommissionersSpider",
+        "name": "kancit_parks_recreation_board_of_commissioners",
+        "agency": "Parks & Recreation Board of Commissioners",
+        "agency_filter": "Parks & Recreation Board of Commissioners",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitParksAndRecreationBoardOfCommissionersSpider",
+        "name": "kancit_parks_and_recreation_board_of_commission",
+        "agency": "Parks and Recreation Board of Commissioners",
+        "agency_filter": "Parks and Recreation Board of Commissioners",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitPartnersForPeaceSpider",
+        "name": "kancit_partners_for_peace",
+        "agency": "Partners for Peace",
+        "agency_filter": "Partners for Peace",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitPensionReformTaskForceCommitteeSpider",
+        "name": "kancit_pension_reform_task_force_committee",
+        "agency": "Pension Reform Task Force Committee",
+        "agency_filter": "Pension Reform Task Force Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitPlanningAndZoningCommitteeSpider",
+        "name": "kancit_planning_and_zoning_committee",
+        "agency": "Planning and Zoning Committee",
+        "agency_filter": "Planning and Zoning Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitPlanningZoningAndEconomicDevelopmentCommitteeAndNeighborhoodsAndPublicSafetyCommitteeJointSessionSpider",  # noqa: E501
+        "name": "kancit_planning_zoning_and_economic_development",
+        "agency": "Planning Zoning and Economic Development Committee and Neighborhoods and Public Safety Committee Joint Session",  # noqa: E501
+        "agency_filter": "Planning Zoning and Economic Development Committee and Neighborhoods and Public Safety Committee Joint Session",  # noqa: E501
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitPlanningZoningEconomicDevelopmentCommitteeSpider",
+        "name": "kancit_planning_zoning_economic_development_com",
+        "agency": "Planning, Zoning & Economic Development Committee",
+        "agency_filter": "Planning, Zoning & Economic Development Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitPlanningZoningAndEconomicDevelopmentFinanceGovernanceAndEthicsCommitteeSpider",  # noqa: E501
+        "name": "kancit_planning_zoning_and_economic_developm_153",
+        "agency": "Planning, Zoning and Economic Development -Finance, Governance and Ethics Committee",  # noqa: E501
+        "agency_filter": "Planning, Zoning and Economic Development -Finance, Governance and Ethics Committee",  # noqa: E501
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitPortKcSpider",
+        "name": "kancit_port_kc",
+        "agency": "Port KC",
+        "agency_filter": "Port KC",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitPropertyMaintenanceAppealsBoardSpider",
+        "name": "kancit_property_maintenance_appeals_board",
+        "agency": "Property Maintenance Appeals Board",
+        "agency_filter": "Property Maintenance Appeals Board",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitPublicBudgetHearingsSpider",
+        "name": "kancit_public_budget_hearings",
+        "agency": "Public Budget Hearings",
+        "agency_filter": "Public Budget Hearings",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitPublicHearingOnMastSpider",
+        "name": "kancit_public_hearing_on_mast",
+        "agency": "Public Hearing on Mast",
+        "agency_filter": "Public Hearing on Mast",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitPublicHearingOnStormSewerConstructionRegulationsAndMaterialSpecificationsSpider",  # noqa: E501
+        "name": "kancit_public_hearing_on_storm_sewer_constructi",
+        "agency": "Public Hearing on Storm Sewer Construction Regulations and Material Specifications",  # noqa: E501
+        "agency_filter": "Public Hearing on Storm Sewer Construction Regulations and Material Specifications",  # noqa: E501
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitPublicImprovementAdvisoryCommitteeSpider",
+        "name": "kancit_public_improvement_advisory_committee",
+        "agency": "Public Improvement Advisory Committee",
+        "agency_filter": "Public Improvement Advisory Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitPublicImprovementAdvisoryCommitteePiacSpider",
+        "name": "kancit_public_improvement_advisory_committee_pi",
+        "agency": "Public Improvement Advisory Committee (PIAC)",
+        "agency_filter": "Public Improvement Advisory Committee (PIAC)",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitPublicSafetyEmergencyServicesCommitteeSpider",
+        "name": "kancit_public_safety_emergency_services_committ",
+        "agency": "Public Safety & Emergency Services Committee",
+        "agency_filter": "Public Safety & Emergency Services Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitPublicSafetyAndNeighborhoodsCommitteeSpider",
+        "name": "kancit_public_safety_and_neighborhoods_committe",
+        "agency": "Public Safety and Neighborhoods Committee",
+        "agency_filter": "Public Safety and Neighborhoods Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitPublicSafetyGroupSpider",
+        "name": "kancit_public_safety_group",
+        "agency": "Public Safety Group",
+        "agency_filter": "Public Safety Group",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitPzeAndTransportationJointComitteeSpider",
+        "name": "kancit_pze_and_transportation_joint_comittee",
+        "agency": "PZE and Transportation Joint Comittee",
+        "agency_filter": "PZE and Transportation Joint Comittee",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitPzeCommitteeWorksessionSpider",
+        "name": "kancit_pze_committee_worksession",
+        "agency": "PZE Committee Worksession",
+        "agency_filter": "PZE Committee Worksession",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitRedistrictingAdvisoryBoardSpider",
+        "name": "kancit_redistricting_advisory_board",
+        "agency": "Redistricting Advisory Board",
+        "agency_filter": "Redistricting Advisory Board",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitRiskManagementCommitteeSpider",
+        "name": "kancit_risk_management_committee",
+        "agency": "Risk Management Committee",
+        "agency_filter": "Risk Management Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitRulesAndAuditCommitteeSpider",
+        "name": "kancit_rules_and_audit_committee",
+        "agency": "Rules And Audit Committee",
+        "agency_filter": "Rules And Audit Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitSavKcSpider",
+        "name": "kancit_sav_kc",
+        "agency": "Sav KC",
+        "agency_filter": "Sav KC",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitSeniorCitizensAdvisoryCouncilSpider",
+        "name": "kancit_senior_citizens_advisory_council",
+        "agency": "Senior Citizens' Advisory Council",
+        "agency_filter": "Senior Citizens' Advisory Council",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitServiceFirstMeetingsSpider",
+        "name": "kancit_service_first_meetings",
+        "agency": "Service First Meetings",
+        "agency_filter": "Service First Meetings",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitSmallBusinessTaskForceSmbtfSpider",
+        "name": "kancit_small_business_task_force_smbtf",
+        "agency": "Small Business Task Force (SMBTF)",
+        "agency_filter": "Small Business Task Force (SMBTF)",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitSmallBusinessEntrepreneurshipJobsCommitteeSpider",
+        "name": "kancit_small_business_entrepreneurship_jobs_com",
+        "agency": "Small Business, Entrepreneurship & Jobs Committee",
+        "agency_filter": "Small Business, Entrepreneurship & Jobs Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitSpecialCommitteeForEmergencyServicesSpider",
+        "name": "kancit_special_committee_for_emergency_services",
+        "agency": "Special Committee for Emergency Services",
+        "agency_filter": "Special Committee for Emergency Services",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitSpecialCommitteeForLegalReviewSpider",
+        "name": "kancit_special_committee_for_legal_review",
+        "agency": "Special Committee for Legal Review",
+        "agency_filter": "Special Committee for Legal Review",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitSpecialCommitteeForMunicipalRehabilitationAndDetentionSpider",  # noqa: E501
+        "name": "kancit_special_committee_for_municipal_rehabili",
+        "agency": "Special Committee for Municipal Rehabilitation and Detention",
+        "agency_filter": "Special Committee for Municipal Rehabilitation and Detention",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitSpecialCommitteeOnHousingPolicySpider",
+        "name": "kancit_special_committee_on_housing_policy",
+        "agency": "Special Committee on Housing Policy",
+        "agency_filter": "Special Committee on Housing Policy",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitSpecialCommitteeOnSmallBusinessesSpider",
+        "name": "kancit_special_committee_on_small_businesses",
+        "agency": "Special Committee on Small Businesses",
+        "agency_filter": "Special Committee on Small Businesses",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitSpecialRedistrictingCommitteeSpider",
+        "name": "kancit_special_redistricting_committee",
+        "agency": "Special Redistricting Committee",
+        "agency_filter": "Special Redistricting Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitStrategicPlanningSessionSpider",
+        "name": "kancit_strategic_planning_session",
+        "agency": "Strategic Planning Session",
+        "agency_filter": "Strategic Planning Session",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitTaxIncrementFinancingCommissionSpider",
+        "name": "kancit_tax_increment_financing_commission",
+        "agency": "Tax Increment Financing Commission",
+        "agency_filter": "Tax Increment Financing Commission",
+        "classification": COMMISSION,
+    },
+    {
+        "class_name": "KancitTenantsRightToCounselSpider",
+        "name": "kancit_tenants_right_to_counsel",
+        "agency": "Tenant's Right to Counsel",
+        "agency_filter": "Tenant's Right to Counsel",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitTheAntiochCenterCommunityImprovementDistrictSpider",
+        "name": "kancit_the_antioch_center_community_improvement",
+        "agency": "The Antioch Center Community Improvement District",
+        "agency_filter": "The Antioch Center Community Improvement District",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitTransportationInfrastructureCommitteeSpider",
+        "name": "kancit_transportation_infrastructure_committee",
+        "agency": "Transportation & Infrastructure Committee",
+        "agency_filter": "Transportation & Infrastructure Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitTransportationAndInfrastructurePlanningZoningAndDevelopmentJointCommitteeSpider",  # noqa: E501
+        "name": "kancit_transportation_and_infrastructure_planni",
+        "agency": "Transportation and Infrastructure & Planning, Zoning and Development Joint Committee",  # noqa: E501
+        "agency_filter": "Transportation and Infrastructure & Planning, Zoning and Development Joint Committee",  # noqa: E501
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitTransportationAndInfrastructureCommitteeSpider",
+        "name": "kancit_transportation_and_infrastructure_commit",
+        "agency": "Transportation and Infrastructure Committee",
+        "agency_filter": "Transportation and Infrastructure Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitTransportationAndInfrastructureCommitteeWorksessionSpider",
+        "name": "kancit_transportation_and_infrastructure_com_187",
+        "agency": "Transportation and Infrastructure Committee Worksession",
+        "agency_filter": "Transportation and Infrastructure Committee Worksession",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitTransportationAndInfrastructureWorksessionSpider",
+        "name": "kancit_transportation_and_infrastructure_workse",
+        "agency": "Transportation and Infrastructure Worksession",
+        "agency_filter": "Transportation and Infrastructure Worksession",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitTransportationInfrastructureAndOperationsCommitteeSpider",
+        "name": "kancit_transportation_infrastructure_and_operat",
+        "agency": "Transportation, Infrastructure and Operations Committee",
+        "agency_filter": "Transportation, Infrastructure and Operations Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitVineStreetCommunityImprovementDistrictSpider",
+        "name": "kancit_vine_street_community_improvement_distri",
+        "agency": "Vine Street Community Improvement District",
+        "agency_filter": "Vine Street Community Improvement District",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitViolenceFreeKcCommitteeSpider",
+        "name": "kancit_violence_free_kc_committee",
+        "agency": "Violence Free KC Committee",
+        "agency_filter": "Violence Free KC Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitViolenceFreeKcCommitteeVfkccSpider",
+        "name": "kancit_violence_free_kc_committee_vfkcc",
+        "agency": "Violence Free KC Committee (VFKCC)",
+        "agency_filter": "Violence Free KC Committee (VFKCC)",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitVisionZeroTaskForceSpider",
+        "name": "kancit_vision_zero_task_force",
+        "agency": "Vision Zero Task Force",
+        "agency_filter": "Vision Zero Task Force",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitVisitkcSpider",
+        "name": "kancit_visitkc",
+        "agency": "VisitKC",
+        "agency_filter": "VisitKC",
+        "classification": NOT_CLASSIFIED,
+    },
+    {
+        "class_name": "KancitWaterUtilitiesAdvisoryBoardSpider",
+        "name": "kancit_water_utilities_advisory_board",
+        "agency": "Water Utilities Advisory Board",
+        "agency_filter": "Water Utilities Advisory Board",
+        "classification": BOARD,
+    },
+    {
+        "class_name": "KancitWestportEventsManagementCommitteeSpider",
+        "name": "kancit_westport_events_management_committee",
+        "agency": "Westport Events Management Committee",
+        "agency_filter": "Westport Events Management Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitWorksessionOfTheFinanceAuditCommitteeSpider",
+        "name": "kancit_worksession_of_the_finance_audit_committ",
+        "agency": "Worksession of the Finance & Audit Committee",
+        "agency_filter": "Worksession of the Finance & Audit Committee",
+        "classification": COMMITTEE,
+    },
+    {
+        "class_name": "KancitYouthDevelopmentCommitteeSpider",
+        "name": "kancit_youth_development_committee",
+        "agency": "Youth Development Committee",
+        "agency_filter": "Youth Development Committee",
+        "classification": COMMITTEE,
+    },
+]
 
 
-class KancitMissouricitySpider(LegistarSpider):
-    name = "kancit_missouricity"
-    agency = "City of Kansas City Missouri"
-    timezone = "America/Chicago"
-    start_urls = ["https://clerk.kcmo.gov/Calendar.aspx"]
+def create_spiders():
+    """
+    Dynamically create spider classes using the spider_configs list
+    and register them in the global namespace.
+    """
+    for config in spider_configs:
+        class_name = config["class_name"]
 
-    # Legistar calendar requires bypassing robots.txt
-    custom_settings = {
-        "ROBOTSTXT_OBEY": False,
-    }
+        if class_name not in globals():
+            # Build attributes dict without class_name
+            attrs = {k: v for k, v in config.items() if k != "class_name"}
 
-    def parse(self, response):
-        """
-        Override parent to also process initial page and request future years.
-        The initial page shows 'This Month' with upcoming meetings.
-        """
-        # First, process the initial page which shows current/upcoming meetings
-        yield from self._parse_legistar_events_page(response)
-
-        # Then request data for each year (past and future)
-        secrets = self._parse_secrets(response)
-        current_year = datetime.now().year
-
-        # Request previous year, current year, and next year for future-proofing
-        for year in range(current_year - 1, current_year + 2):
-            yield scrapy.Request(
-                response.url,
-                method="POST",
-                headers={"Content-Type": "application/x-www-form-urlencoded"},
-                body=urlencode(
-                    {
-                        **secrets,
-                        "__EVENTTARGET": "ctl00$ContentPlaceHolder1$lstYears",
-                        "ctl00_ContentPlaceHolder1_lstYears_ClientState": (
-                            f'{{"value":"{year}"}}'
-                        ),
-                    }
-                ),
-                callback=self._parse_legistar_events_page,
-                dont_filter=True,
+            # Dynamically create the spider class
+            spider_class = type(
+                class_name,
+                (KancitMissouricityMixin,),
+                attrs,
             )
 
-    def _parse_legistar_events(self, response):
-        """
-        Override parent to include ALL events from ALL tables on the page.
-        Kansas City has two tables: gridUpcomingMeetings and gridCalendar.
-        Uses meeting name URL + date/time for deduplication.
-        """
-        events = []
+            # Register the class in the global namespace
+            globals()[class_name] = spider_class
 
-        # Process ALL rgMasterTable tables on the page
-        for events_table in response.css("table.rgMasterTable"):
-            headers = []
-            for header in events_table.css("th[class^='rgHeader']"):
-                header_text = (
-                    " ".join(header.css("*::text").extract())
-                    .replace("&nbsp;", " ")
-                    .strip()
-                )
-                header_inputs = header.css("input")
-                if header_text:
-                    headers.append(header_text)
-                elif len(header_inputs) > 0:
-                    headers.append(header_inputs[0].attrib["value"])
-                else:
-                    img_els = header.css("img")
-                    if img_els:
-                        headers.append(img_els[0].attrib.get("alt", ""))
-                    else:
-                        headers.append("")
 
-            for row in events_table.css("tr.rgRow, tr.rgAltRow"):
-                try:
-                    data = defaultdict(lambda: None)
-                    for header, field in zip(headers, row.css("td")):
-                        field_text = (
-                            " ".join(field.css("*::text").extract())
-                            .replace("&nbsp;", " ")
-                            .strip()
-                        )
-                        url = None
-                        if len(field.css("a")) > 0:
-                            link_el = field.css("a")[0]
-                            if "onclick" in link_el.attrib and link_el.attrib[
-                                "onclick"
-                            ].startswith(
-                                ("radopen('", "window.open", "OpenTelerikWindow")
-                            ):
-                                url = response.urljoin(
-                                    link_el.attrib["onclick"].split("'")[1]
-                                )
-                            elif "href" in link_el.attrib:
-                                url = response.urljoin(link_el.attrib["href"])
-                        if url:
-                            if header in ["", "ics"] and "View.ashx?M=IC" in url:
-                                header = "iCalendar"
-                                value = {"url": url}
-                            else:
-                                value = {"label": field_text, "url": url}
-                        else:
-                            value = field_text
-
-                        data[header] = value
-
-                    # Use name URL + date + time as unique key for deduplication
-                    name_url = ""
-                    if isinstance(data.get("Name"), dict):
-                        name_url = data["Name"].get("url", "")
-                    meeting_date = data.get("Meeting Date", "")
-                    meeting_time = data.get("Meeting Time", "")
-                    unique_key = f"{name_url}|{meeting_date}|{meeting_time}"
-
-                    if unique_key in self._scraped_urls:
-                        continue
-                    self._scraped_urls.add(unique_key)
-                    events.append(dict(data))
-                except Exception:
-                    pass
-
-        return events
-
-    def parse_legistar(self, events):
-        """Parse events from Legistar calendar."""
-        for event in events:
-            start = self.legistar_start(event)
-            if not start:
-                continue
-
-            meeting = Meeting(
-                title=(
-                    event.get("Name", {}).get("label", "")
-                    if isinstance(event.get("Name"), dict)
-                    else event.get("Name", "")
-                ),
-                description="",
-                classification=self._parse_classification(event),
-                start=start,
-                end=None,
-                all_day=False,
-                time_notes="",
-                location=self._parse_location(event),
-                links=self._parse_links(event),
-                source=self.legistar_source(event),
-            )
-
-            meeting["status"] = self._get_status(meeting)
-            meeting["id"] = self._get_id(meeting)
-
-            yield meeting
-
-    def _parse_classification(self, item):
-        """Parse classification from meeting name."""
-        name = ""
-        if isinstance(item.get("Name"), dict):
-            name = item["Name"].get("label", "").lower()
-        elif isinstance(item.get("Name"), str):
-            name = item["Name"].lower()
-
-        if "council" in name:
-            return CITY_COUNCIL
-        if "committee" in name:
-            return COMMITTEE
-        if "commission" in name:
-            return COMMISSION
-        if "board" in name:
-            return BOARD
-        return NOT_CLASSIFIED
-
-    def _parse_location(self, item):
-        """Parse location from event data."""
-        location = {"name": "", "address": ""}
-        meeting_location = item.get("Meeting Location", "")
-
-        if isinstance(meeting_location, dict):
-            meeting_location = meeting_location.get("label", "")
-
-        if not meeting_location:
-            return location
-
-        # Clean up the location string
-        meeting_location = meeting_location.strip()
-
-        # Check for virtual meeting indicators
-        if "zoom" in meeting_location.lower() or "virtual" in meeting_location.lower():
-            location["name"] = "Virtual Meeting"
-            location["address"] = ""
-            return location
-
-        # Try to parse address with ZIP code pattern
-        zip_match = re.search(r"(\d{5}(-\d{4})?)", meeting_location)
-        if zip_match:
-            location["address"] = meeting_location
-        else:
-            location["name"] = meeting_location
-
-        return location
-
-    def _parse_links(self, item):
-        """Parse links from event data."""
-        links = []
-
-        # Agenda link
-        agenda = item.get("Agenda")
-        if isinstance(agenda, dict) and agenda.get("url"):
-            links.append(
-                {"href": agenda["url"], "title": agenda.get("label", "Agenda")}
-            )
-
-        # Minutes link
-        minutes = item.get("Minutes")
-        if isinstance(minutes, dict) and minutes.get("url"):
-            links.append(
-                {"href": minutes["url"], "title": minutes.get("label", "Minutes")}
-            )
-
-        # iCalendar link
-        ical = item.get("iCalendar")
-        if isinstance(ical, dict) and ical.get("url"):
-            links.append({"href": ical["url"], "title": "iCalendar"})
-
-        # Video link
-        video = item.get("Video")
-        if isinstance(video, dict) and video.get("url"):
-            label = video.get("label", "Video")
-            if (
-                label
-                and "not" not in label.lower()
-                and "available" not in label.lower()
-            ):
-                links.append({"href": video["url"], "title": label})
-
-        # Audio link
-        audio = item.get("Audio")
-        if isinstance(audio, dict) and audio.get("url"):
-            label = audio.get("label", "Audio")
-            if (
-                label
-                and "not" not in label.lower()
-                and "available" not in label.lower()
-            ):
-                links.append({"href": audio["url"], "title": label})
-
-        return links
+# Create all spider classes at module load
+create_spiders()
