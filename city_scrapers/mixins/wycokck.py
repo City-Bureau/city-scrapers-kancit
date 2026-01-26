@@ -76,13 +76,14 @@ class CivicClerkMixin(CityScrapersSpider):
     default_address = "701 N 7th Street, Kansas City, KS 66101"
 
     # Date range configuration (can be overridden by subclasses)
-    years_back = 3
+    # First meeting in CivicClerk API: 2015-05-04
+    start_date_str = "2015-05-01"
     months_ahead = 3
 
     def start_requests(self):
         """Generate API requests for past and upcoming events."""
         today = date.today()
-        start_date = today - relativedelta(years=self.years_back)
+        start_date = date.fromisoformat(self.start_date_str)
         end_date = today + relativedelta(months=self.months_ahead)
 
         start_date_str = start_date.isoformat()
