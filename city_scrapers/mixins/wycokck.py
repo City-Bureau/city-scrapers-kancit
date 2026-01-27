@@ -22,6 +22,7 @@ Example:
         category_ids = [31, 33, 35, 36, 37]
 """
 
+import re
 from datetime import date, datetime
 
 import scrapy
@@ -153,10 +154,20 @@ class CivicClerkMixin(CityScrapersSpider):
         return NOT_CLASSIFIED
 
     def _parse_title(self, raw_event):
-        """Parse or generate meeting title, cleaning up empty parentheses."""
+        """
+        Parse or generate meeting title, normalizing parenthetical content.
+
+        Removes:
+        - Empty parentheses: "Title ()" -> "Title"
+        - Date annotations: "Title (to 01.28.26)" -> "Title"
+        - Whitespace-only parentheses: "Title (  )" -> "Title"
+        """
         title = raw_event.get("eventName") or self.agency
-        # Remove empty parentheses left after cancelled/cancel removal
-        title = title.replace("()", "").strip()
+        # Remove parentheses containing dates, "to" prefixes, or empty/whitespace
+        # Matches: (), (  ), (to 01.28.26), (01/28/2026), etc.
+        title = re.sub(r"\s*\(\s*(to\s*)?[\d./\-\s]*\s*\)", "", title)
+        # Collapse multiple spaces to single space
+        title = re.sub(r"\s+", " ", title).strip()
         return title
 
     def _parse_start(self, raw_event):
