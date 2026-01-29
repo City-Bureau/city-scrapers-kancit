@@ -141,31 +141,37 @@ class CivicClerkMixin(CityScrapersSpider):
 
     def _parse_classification(self, title):
         """
-        Parse classification from meeting title.
-        Derives classification based on keywords in the title.
+        Parse classification from meeting title and agency name.
+        Combines both to catch keywords that may only appear in the agency field.
         """
-        title_lower = title.lower()
-        if "committee" in title_lower:
-            return COMMITTEE
-        if "commission" in title_lower:
-            return COMMISSION
-        if "board" in title_lower:
-            return BOARD
+        title_agency = f"{title} {self.agency}".lower()
+
+        classification_map = {
+            "committee": COMMITTEE,
+            "commission": COMMISSION,
+            "board": BOARD,
+        }
+
+        for keyword, classification in classification_map.items():
+            if keyword in title_agency:
+                return classification
+
         return NOT_CLASSIFIED
 
     def _parse_title(self, raw_event):
         """
-        Parse or generate meeting title, normalizing parenthetical content.
+        Parse or generate meeting title with robust normalization.
 
         Removes:
-        - Empty parentheses: "Title ()" -> "Title"
-        - Date annotations: "Title (to 01.28.26)" -> "Title"
-        - Whitespace-only parentheses: "Title (  )" -> "Title"
+        - Any trailing parenthetical content: "Title (anything)" -> "Title"
+        - Trailing dates: "Title 01.28.26" -> "Title"
+        - Extra whitespace
         """
         title = raw_event.get("eventName") or self.agency
-        # Remove parentheses containing dates, "to" prefixes, or empty/whitespace
-        # Matches: (), (  ), (to 01.28.26), (01/28/2026), etc.
-        title = re.sub(r"\s*\(\s*(to\s*)?[\d./\-\s]*\s*\)", "", title)
+        # Remove any parenthetical content at end of string
+        title = re.sub(r"\s*\([^)]*\)\s*$", "", title)
+        # Remove trailing dates in various formats (01.28.26, 01/28/2026, etc.)
+        title = re.sub(r"\s+\d{1,2}[./]\d{1,2}[./]\d{2,4}\s*$", "", title)
         # Collapse multiple spaces to single space
         title = re.sub(r"\s+", " ", title).strip()
         return title
