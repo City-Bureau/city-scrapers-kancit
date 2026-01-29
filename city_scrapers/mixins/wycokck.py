@@ -115,7 +115,8 @@ class CivicClerkMixin(CityScrapersSpider):
             if not event_id:
                 continue
 
-            title = self._parse_title(raw_event)
+            raw_title = raw_event.get("eventName") or self.agency
+            title = self._parse_title(raw_title)
             meeting = Meeting(
                 title=title,
                 description=raw_event.get("eventDescription") or "",
@@ -128,8 +129,7 @@ class CivicClerkMixin(CityScrapersSpider):
                 links=self._parse_links(raw_event),
                 source=f"{self.portal_base_url}/event/{event_id}",
             )
-
-            meeting["status"] = self._get_status(meeting)
+            meeting["status"] = self._get_status(meeting, text=raw_title)
             meeting["id"] = self._get_id(meeting)
 
             yield meeting
@@ -142,23 +142,29 @@ class CivicClerkMixin(CityScrapersSpider):
     def _parse_classification(self, title):
         """
         Parse classification from meeting title and agency name.
-        Combines both to catch keywords that may only appear in the agency field.
+        Prioritizes title keywords, then falls back to agency keywords.
         """
-        title_agency = f"{title} {self.agency}".lower()
-
         classification_map = {
-            "committee": COMMITTEE,
             "commission": COMMISSION,
             "board": BOARD,
+            "committee": COMMITTEE,
         }
 
+        # Check title first (prioritize title keywords)
+        title_lower = title.lower()
         for keyword, classification in classification_map.items():
-            if keyword in title_agency:
+            if keyword in title_lower:
+                return classification
+
+        # Fall back to agency if no match in title
+        agency_lower = self.agency.lower()
+        for keyword, classification in classification_map.items():
+            if keyword in agency_lower:
                 return classification
 
         return NOT_CLASSIFIED
 
-    def _parse_title(self, raw_event):
+    def _parse_title(self, raw_title):
         """
         Parse or generate meeting title with robust normalization.
 
@@ -167,7 +173,7 @@ class CivicClerkMixin(CityScrapersSpider):
         - Trailing dates: "Title 01.28.26" -> "Title"
         - Extra whitespace
         """
-        title = raw_event.get("eventName") or self.agency
+        title = raw_title
         # Remove any parenthetical content at end of string
         title = re.sub(r"\s*\([^)]*\)\s*$", "", title)
         # Remove trailing dates in various formats (01.28.26, 01/28/2026, etc.)
