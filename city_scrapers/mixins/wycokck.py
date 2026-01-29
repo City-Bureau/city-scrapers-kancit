@@ -120,7 +120,7 @@ class CivicClerkMixin(CityScrapersSpider):
             meeting = Meeting(
                 title=title,
                 description=raw_event.get("eventDescription") or "",
-                classification=self._parse_classification(title),
+                classification=self._parse_classification(f"{title} {self.agency}"),
                 start=self._parse_start(raw_event),
                 end=self._parse_end(raw_event),
                 all_day=False,
@@ -142,7 +142,6 @@ class CivicClerkMixin(CityScrapersSpider):
     def _parse_classification(self, title):
         """
         Parse classification from meeting title and agency name.
-        Prioritizes title keywords, then falls back to agency keywords.
         """
         classification_map = {
             "commission": COMMISSION,
@@ -150,16 +149,8 @@ class CivicClerkMixin(CityScrapersSpider):
             "committee": COMMITTEE,
         }
 
-        # Check title first (prioritize title keywords)
-        title_lower = title.lower()
         for keyword, classification in classification_map.items():
-            if keyword in title_lower:
-                return classification
-
-        # Fall back to agency if no match in title
-        agency_lower = self.agency.lower()
-        for keyword, classification in classification_map.items():
-            if keyword in agency_lower:
+            if keyword in title.lower():
                 return classification
 
         return NOT_CLASSIFIED
