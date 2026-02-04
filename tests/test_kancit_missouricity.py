@@ -9,8 +9,8 @@ from scrapy.http import HtmlResponse, Request
 
 from city_scrapers.spiders import kancit_missouricity
 
-# Get the Council spider from the factory
-KancitCouncilSpider = kancit_missouricity.KancitCouncilSpider
+# Get the Council spider from the factory (KancitSpider034 = Council)
+KancitCouncilSpider = kancit_missouricity.KancitSpider034
 
 # Load test data
 with open(join(dirname(__file__), "files", "kancit_council.json"), "r") as f:
