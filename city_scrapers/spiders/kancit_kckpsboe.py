@@ -1,3 +1,4 @@
+import re
 from datetime import date, datetime, timedelta
 from urllib.parse import urlencode
 
@@ -14,7 +15,7 @@ class KancitKckpsBoeSpider(CityScrapersSpider):
     base_url = "https://kckps.community.highbond.com"
     meetings_api_url = f"{base_url}/Services/MeetingsService.svc/meetings"
     link_url = f"{base_url}/Portal/MeetingInformation.aspx"
-    start_urls = f"{base_url}/Portal/MeetingTypeList.aspx"
+    source_url = f"{base_url}/Portal/MeetingTypeList.aspx"
     custom_settings = {"ROBOTSTXT_OBEY": False}
 
     def start_requests(self):
@@ -58,7 +59,7 @@ class KancitKckpsBoeSpider(CityScrapersSpider):
             time_notes=self._parse_time_notes(item),
             location=self._parse_location(item),
             links=self._parse_links(item),
-            source=self.start_urls,
+            source=self.source_url,
         )
 
         meeting["status"] = self._get_status(meeting)
@@ -69,8 +70,6 @@ class KancitKckpsBoeSpider(CityScrapersSpider):
     def _parse_title(self, item):
         """Parse or generate meeting title."""
         title = item.get("Name", "").strip() or item.get("MeetingTypeName", "").strip()
-
-        import re
 
         # Remove time information first
         time_patterns = [
@@ -162,56 +161,66 @@ class KancitKckpsBoeSpider(CityScrapersSpider):
         )
 
         LOCATION_MAP = [
-            (
-                "Board Retreat",
-                None,
-                "10 E Cambridge Circle Drive #300, Kansas City, Kansas 66103",
-                "McAnany Van Cleave & Phillips Law Firm",
-            ),
-            ("Academic Committee Meeting", None, "2010 N. 59th Street", CENTRAL_OFFICE),
-            (
-                "Finance Committee Meeting",
-                None,
-                "",
-                "Kansas City, Kansas Public Schools",
-            ),
-            (
-                "Facilities",
-                "Committee Meeting",
-                "2010 N. 59th Street, Third Floor East Wing",
-                CENTRAL_OFFICE,
-            ),
-            (
-                "Boundary",
-                "Committee Meeting",
-                "2010 N. 59th Street, Third Floor East Wing",
-                CENTRAL_OFFICE,
-            ),
-            (
-                "Special Board Meeting Agenda",
-                None,
-                "2010 N. 59th Street, Third Floor Board Room",
-                CENTRAL_OFFICE,
-            ),
-            ("Special", None, "2010 N. 59th Street", CENTRAL_OFFICE),
-            (
-                "Regular Meeting Agenda",
-                None,
-                "2010 N. 59th Street, Third Floor Board Room",
-                CENTRAL_OFFICE,
-            ),
-            (
-                "Regular Board Meeting Agenda",
-                None,
-                "2010 N. 59th Street, Third Floor Board Room",
-                CENTRAL_OFFICE,
-            ),
+            {
+                "keyword": "Board Retreat",
+                "extra": None,
+                "address": "10 E Cambridge Circle Drive #300, Kansas City, Kansas 66103",  # noqa
+                "name": "McAnany Van Cleave & Phillips Law Firm",
+            },
+            {
+                "keyword": "Academic Committee Meeting",
+                "extra": None,
+                "address": "2010 N. 59th Street",
+                "name": CENTRAL_OFFICE,
+            },
+            {
+                "keyword": "Finance Committee Meeting",
+                "extra": None,
+                "address": "",
+                "name": "Kansas City, Kansas Public Schools",
+            },
+            {
+                "keyword": "Facilities",
+                "extra": "Committee Meeting",
+                "address": "2010 N. 59th Street, Third Floor East Wing",
+                "name": CENTRAL_OFFICE,
+            },
+            {
+                "keyword": "Boundary",
+                "extra": "Committee Meeting",
+                "address": "2010 N. 59th Street, Third Floor East Wing",
+                "name": CENTRAL_OFFICE,
+            },
+            {
+                "keyword": "Special Board Meeting Agenda",
+                "extra": None,
+                "address": "2010 N. 59th Street, Third Floor Board Room",
+                "name": CENTRAL_OFFICE,
+            },
+            {
+                "keyword": "Special",
+                "extra": None,
+                "address": "2010 N. 59th Street",
+                "name": CENTRAL_OFFICE,
+            },
+            {
+                "keyword": "Regular Meeting Agenda",
+                "extra": None,
+                "address": "2010 N. 59th Street, Third Floor Board Room",
+                "name": CENTRAL_OFFICE,
+            },
+            {
+                "keyword": "Regular Board Meeting Agenda",
+                "extra": None,
+                "address": "2010 N. 59th Street, Third Floor Board Room",
+                "name": CENTRAL_OFFICE,
+            },
         ]
 
-        for keyword, extra, address, name in LOCATION_MAP:
-            if keyword in meeting_title:
-                if extra is None or extra in meeting_title:
-                    return {"address": address, "name": name}
+        for loc in LOCATION_MAP:
+            if loc["keyword"] in meeting_title:
+                if loc["extra"] is None or loc["extra"] in meeting_title:
+                    return {"address": loc["address"], "name": loc["name"]}
 
         return {"address": "", "name": item.get("MeetingLocation", "")}
 
