@@ -35,9 +35,7 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
     calendar_base_url = "https://www.kcpublicschools.org/about/board-of-directors"
 
     # Set to track upcoming meeting dates from Simbli to avoid duplicates with calendar meetings # noqa
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.simbli_upcoming_dates = set()
+    simbli_upcoming_dates = set()
 
     def start_requests(self):
         """

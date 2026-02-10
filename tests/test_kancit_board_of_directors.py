@@ -2,7 +2,13 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import BOARD, COMMITTEE, NOT_CLASSIFIED
+from city_scrapers_core.constants import (
+    BOARD,
+    COMMITTEE,
+    NOT_CLASSIFIED,
+    PASSED,
+    TENTATIVE,
+)
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
@@ -419,11 +425,11 @@ def test_past_meetings_marked_correctly():
     # Dec 9 meeting should be marked as passed
     for item in parsed_items:
         if item["start"] < datetime(2026, 1, 10):
-            assert item["status"] == "passed"
+            assert item["status"] == PASSED
 
 
 def test_future_meetings_marked_correctly():
     """Test that meetings after Jan 10 are marked as tentative"""
     for item in parsed_items:
         if item["start"] >= datetime(2026, 1, 10):
-            assert item["status"] == "tentative"
+            assert item["status"] == TENTATIVE
