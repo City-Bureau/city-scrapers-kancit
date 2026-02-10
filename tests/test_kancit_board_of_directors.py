@@ -33,6 +33,7 @@ test_api_response.request = Request(
 
 spider = KancitBoardOfDirectorsSpider()
 
+# Date - before calendar meetings but after some API meetings
 freezer = freeze_time("2026-01-10")
 freezer.start()
 
@@ -42,12 +43,7 @@ for item in spider.parse_calendar_response(test_calendar_response):
     if isinstance(item, Meeting):
         parsed_calendar_items.append(item)
 
-freezer.stop()
-
-# Parse API-based meetings (use different freeze time to test past/future logic)
-freezer2 = freeze_time("2026-01-28")  # After all meetings
-freezer2.start()
-
+# Parse API-based meetings
 parsed_api_items = []
 for item in spider.parse_api_response(test_api_response):
     if isinstance(item, Meeting):
@@ -56,7 +52,7 @@ for item in spider.parse_api_response(test_api_response):
 # Combine all items for general tests
 parsed_items = parsed_calendar_items + parsed_api_items
 
-freezer2.stop()
+freezer.stop()
 
 
 # CALENDAR-BASED MEETING TESTS
@@ -208,7 +204,7 @@ def test_title_normalization():
 
 
 def test_title_removes_cancelled_parentheses():
-    """Test that (Cancelled) becomes Cancelled for core's _clean_title to handle"""
+    """Test that (Cancelled) becomes Cancelled"""
     assert spider._normalize_title("Meeting (Cancelled)") == "Meeting Cancelled"
     assert spider._normalize_title("Workshop (Rescheduled)") == "Workshop Rescheduled"
 
@@ -222,7 +218,6 @@ def test_title_decodes_html_entities():
 
 
 # CLASSIFICATION TESTS
-# ============================================================================
 
 
 def test_classification_board():
@@ -419,18 +414,16 @@ def test_calendar_meetings_are_upcoming():
         assert item["start"].date() >= datetime(2026, 1, 14).date()
 
 
-def test_api_meetings_marked_as_passed():
-    """Test that past API meetings are marked as passed (frozen to Jan 28)"""
+def test_past_meetings_marked_correctly():
+    """Test that meetings before Jan 10 are marked as passed"""
     # Dec 9 meeting should be marked as passed
-    dec_meetings = [m for m in parsed_api_items if m["start"].month == 12]
-    for m in dec_meetings:
-        assert m["status"] == "passed"
-
-
-def test_api_meetings_marked_correctly():
-    """Test API meeting status based on freeze date Jan 28"""
-    for item in parsed_api_items:
-        if item["start"] < datetime(2026, 1, 28):
+    for item in parsed_items:
+        if item["start"] < datetime(2026, 1, 10):
             assert item["status"] == "passed"
-        else:
-            assert item["status"] in ["tentative"]
+
+
+def test_future_meetings_marked_correctly():
+    """Test that meetings after Jan 10 are marked as tentative"""
+    for item in parsed_items:
+        if item["start"] >= datetime(2026, 1, 10):
+            assert item["status"] == "tentative"

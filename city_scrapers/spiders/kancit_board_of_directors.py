@@ -37,7 +37,6 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
     # Set to track upcoming meeting dates from Simbli to avoid duplicates with calendar meetings # noqa
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # It keeps track of upcoming meeting dates from Simbli to avoid duplicates.
         self.simbli_upcoming_dates = set()
 
     def start_requests(self):
@@ -120,7 +119,7 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
         if not start:
             return None
 
-        # Skip if this date already he passed (only consider upcoming)
+        # Skip if this date already has passed (only consider upcoming)
         if start.date() < datetime.now().date():
             return None
 
@@ -139,7 +138,6 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
             start=start,
             location=location,
             links=[{"href": "", "title": ""}],
-            # source=source_url
             source=self.calendar_base_url,
         )
 
