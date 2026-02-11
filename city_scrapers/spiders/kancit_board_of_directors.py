@@ -1,3 +1,4 @@
+import html
 import json
 import re
 from datetime import datetime
@@ -126,10 +127,20 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
             return None
 
         location_text = event_elem.css(".fsLocation::text").get()
+        location_name = location_text.strip() if location_text else ""
+        
+        # Set address for Board of Education
+        if location_name == "Board of Education":
+            location_address = "2901 Troost Ave, Kansas City, MO"
+            
+        else:
+            location_address = ""
+        
         location = {
-            "name": location_text.strip() if location_text else "",
-            "address": "",
+            "name": location_name,
+            "address": location_address,
         }
+
 
         return self._create_meeting(
             title=normalized_title,
@@ -340,7 +351,8 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
     def _normalize_title(self, title):
         """Remove date patterns and clean up meeting titles"""
         # Decode HTML entities
-        title = title.replace("&amp;", "&")
+        # title = title.replace("&amp;", "&")
+        title = html.unescape(title)
 
         # Remove date patterns
         date_patterns = [
@@ -406,6 +418,10 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
         elif normalized_address1 == "1215 e truman rd":
             location_name = ""
             location_address = " ".join(filter(None, [address1, address2, address3]))
+
+        elif "kcps board of education" in normalized_address1 and "westport room" in normalized_address1:
+            location_name = address1
+            location_address = "2901 Troost Ave, Kansas City, MO"
 
         else:
             location_name = address1
