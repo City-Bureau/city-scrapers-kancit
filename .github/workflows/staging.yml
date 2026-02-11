@@ -10,7 +10,7 @@ on:
 
 env:
   CI: true
-  PYTHON_VERSION: 3.11
+  PYTHON_VERSION: 3.12
   PIPENV_VENV_IN_PROJECT: true
   CITY_SCRAPERS_ENV: staging
   SCRAPY_SETTINGS_MODULE: city_scrapers.settings.staging
