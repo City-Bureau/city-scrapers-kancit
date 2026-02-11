@@ -51,11 +51,11 @@ class KancitKckpsBoeSpider(CityScrapersSpider):
         """Create a Meeting item with parsed data."""
         meeting = Meeting(
             title=self._parse_title(item),
-            description=self._parse_description(item),
+            description="",
             classification=self._parse_classification(item),
             start=self._parse_start(item),
-            end=self._parse_end(item),
-            all_day=self._parse_all_day(item),
+            end=None,
+            all_day=False,
             time_notes=self._parse_time_notes(item),
             location=self._parse_location(item),
             links=self._parse_links(item),
@@ -67,9 +67,13 @@ class KancitKckpsBoeSpider(CityScrapersSpider):
 
         return meeting
 
+    def _get_raw_title(self, item):
+        """Get the raw meeting title from item."""
+        return item.get("Name", "").strip() or item.get("MeetingTypeName", "").strip()
+
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        title = item.get("Name", "").strip() or item.get("MeetingTypeName", "").strip()
+        title = self._get_raw_title(item)
 
         # Remove time information first
         time_patterns = [
@@ -80,6 +84,8 @@ class KancitKckpsBoeSpider(CityScrapersSpider):
 
         for pattern in time_patterns:
             title = re.sub(pattern, "", title, flags=re.IGNORECASE)
+
+        title = title.replace(" - Current", "")
 
         # Remove date from title - handle multiple patterns
 
@@ -99,39 +105,121 @@ class KancitKckpsBoeSpider(CityScrapersSpider):
         for pattern in date_patterns:
             title = re.sub(pattern, "", title, flags=re.IGNORECASE)
 
-        return title.strip()
-
-    def _parse_description(self, item):
-        """Parse or generate meeting description."""
-        return ""
+        # Normalize whitespace
+        return re.sub(r"\s+", " ", title).strip()
 
     def _parse_classification(self, item):
         """Parse or generate classification from allowed options."""
-        meeting_title = (
-            item.get("Name", "").strip() or item.get("MeetingTypeName", "").strip()
-        )
+        meeting_title = self._get_raw_title(item)
 
         # Check both title and meeting type for classification
         if "committee" in meeting_title.lower():
             return COMMITTEE
         return BOARD
 
+    # Default start times (hour) for meetings when API returns midnight
+    MIDNIGHT_DEFAULTS = {
+        14: ["Board Retreat"],
+        13: [
+            "Special Meeting Agenda",
+            "Special (Budget) Meeting Agenda",
+            "Special Board Meeting Agenda",
+            "Special Joint Meeting Agenda",
+            "Aug 1, 2014 (Fri)",
+        ],
+        17: [
+            "Regular Meeting Agenda - Current",
+            "Regular Meeting Agenda",
+            "Regular Board Meeting Agenda",
+        ],
+    }
+
+    # Location constants
+    CENTRAL_OFFICE = (
+        "Kansas City, Kansas Public Schools - Central Office and Training Center"
+    )
+    BASE_ADDRESS = "2010 N. 59th Street"
+    BOARD_ROOM = f"{BASE_ADDRESS}, Third Floor Board Room"
+    EAST_WING = f"{BASE_ADDRESS}, Third Floor East Wing"
+
+    LOCATION_MAP = [
+        {
+            "keyword": "Board Retreat",
+            "extra": None,
+            "address": "10 E Cambridge Circle Drive #300, Kansas City, Kansas 66103",
+            "name": "McAnany Van Cleave & Phillips Law Firm",
+        },
+        {
+            "keyword": "Academic Committee Meeting",
+            "extra": None,
+            "address": BASE_ADDRESS,
+            "name": CENTRAL_OFFICE,
+        },
+        {
+            "keyword": "Finance Committee Meeting",
+            "extra": None,
+            "address": "",
+            "name": "Kansas City, Kansas Public Schools",
+        },
+        {
+            "keyword": "Facilities",
+            "extra": "Committee Meeting",
+            "address": EAST_WING,
+            "name": CENTRAL_OFFICE,
+        },
+        {
+            "keyword": "Boundary",
+            "extra": "Committee Meeting",
+            "address": EAST_WING,
+            "name": CENTRAL_OFFICE,
+        },
+        {
+            "keyword": "Special Board Meeting Agenda",
+            "extra": None,
+            "address": BOARD_ROOM,
+            "name": CENTRAL_OFFICE,
+        },
+        {
+            "keyword": "Special",
+            "extra": None,
+            "address": BASE_ADDRESS,
+            "name": CENTRAL_OFFICE,
+        },
+        {
+            "keyword": "Regular Meeting Agenda",
+            "extra": None,
+            "address": BOARD_ROOM,
+            "name": CENTRAL_OFFICE,
+        },
+        {
+            "keyword": "Regular Board Meeting Agenda",
+            "extra": None,
+            "address": BOARD_ROOM,
+            "name": CENTRAL_OFFICE,
+        },
+    ]
+
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        dt_str = item.get("MeetingDateTime", "")
-        if dt_str:
-            return datetime.strptime(dt_str, "%Y-%m-%d %H:%M")
-        return None
+        datetime_str = item.get("MeetingDateTime", "")
+        if not datetime_str:
+            return None
 
-    def _parse_end(self, item):
-        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        return None
+        start_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
+
+        # Apply default time if API returns midnight
+        if start_datetime.hour == 0 and start_datetime.minute == 0:
+            meeting_title = self._get_raw_title(item)
+            for hour, keywords in self.MIDNIGHT_DEFAULTS.items():
+                if any(keyword in meeting_title for keyword in keywords):
+                    start_datetime = start_datetime.replace(hour=hour, minute=0)
+                    break
+
+        return start_datetime
 
     def _parse_time_notes(self, item):
         """Parse any additional notes on the timing of the meeting"""
-        meeting_title = (
-            item.get("Name", "").strip() or item.get("MeetingTypeName", "").strip()
-        )
+        meeting_title = self._get_raw_title(item)
 
         notes = ["Please check meeting attachments for accurate time and location."]
 
@@ -146,78 +234,11 @@ class KancitKckpsBoeSpider(CityScrapersSpider):
 
         return " ".join(notes)
 
-    def _parse_all_day(self, item):
-        """Parse or generate all-day status. Defaults to False."""
-        return False
-
     def _parse_location(self, item):
         """Parse or generate location."""
-        meeting_title = (
-            item.get("Name", "").strip() or item.get("MeetingTypeName", "").strip()
-        )
+        meeting_title = self._get_raw_title(item)
 
-        CENTRAL_OFFICE = (
-            "Kansas City, Kansas Public Schools - Central Office and Training Center"
-        )
-
-        LOCATION_MAP = [
-            {
-                "keyword": "Board Retreat",
-                "extra": None,
-                "address": "10 E Cambridge Circle Drive #300, Kansas City, Kansas 66103",  # noqa
-                "name": "McAnany Van Cleave & Phillips Law Firm",
-            },
-            {
-                "keyword": "Academic Committee Meeting",
-                "extra": None,
-                "address": "2010 N. 59th Street",
-                "name": CENTRAL_OFFICE,
-            },
-            {
-                "keyword": "Finance Committee Meeting",
-                "extra": None,
-                "address": "",
-                "name": "Kansas City, Kansas Public Schools",
-            },
-            {
-                "keyword": "Facilities",
-                "extra": "Committee Meeting",
-                "address": "2010 N. 59th Street, Third Floor East Wing",
-                "name": CENTRAL_OFFICE,
-            },
-            {
-                "keyword": "Boundary",
-                "extra": "Committee Meeting",
-                "address": "2010 N. 59th Street, Third Floor East Wing",
-                "name": CENTRAL_OFFICE,
-            },
-            {
-                "keyword": "Special Board Meeting Agenda",
-                "extra": None,
-                "address": "2010 N. 59th Street, Third Floor Board Room",
-                "name": CENTRAL_OFFICE,
-            },
-            {
-                "keyword": "Special",
-                "extra": None,
-                "address": "2010 N. 59th Street",
-                "name": CENTRAL_OFFICE,
-            },
-            {
-                "keyword": "Regular Meeting Agenda",
-                "extra": None,
-                "address": "2010 N. 59th Street, Third Floor Board Room",
-                "name": CENTRAL_OFFICE,
-            },
-            {
-                "keyword": "Regular Board Meeting Agenda",
-                "extra": None,
-                "address": "2010 N. 59th Street, Third Floor Board Room",
-                "name": CENTRAL_OFFICE,
-            },
-        ]
-
-        for loc in LOCATION_MAP:
+        for loc in self.LOCATION_MAP:
             if loc["keyword"] in meeting_title:
                 if loc["extra"] is None or loc["extra"] in meeting_title:
                     return {"address": loc["address"], "name": loc["name"]}
