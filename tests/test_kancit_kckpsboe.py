@@ -64,8 +64,8 @@ def test_status(parsed_items):
 
 def test_location(parsed_items):
     assert parsed_items[0]["location"] == {
-        "name": "Kansas City, Kansas Public Schools - Central Office and Training Center",  # noqa
-        "address": "2010 N. 59th Street",
+        "name": "Kansas Public Schools",
+        "address": "2010 N. 59th Street, Kansas City, Kansas 66103",
     }
 
 
@@ -116,8 +116,8 @@ def test_facilities_committee_title(parsed_items):
 
 def test_facilities_committee_location(parsed_items):
     assert parsed_items[2]["location"] == {
-        "name": "Kansas City, Kansas Public Schools - Central Office and Training Center",  # noqa
-        "address": "2010 N. 59th Street, Third Floor East Wing",
+        "name": "Kansas Public Schools - Third Floor East Wing",
+        "address": "2010 N. 59th Street, Kansas City, Kansas 66103",
     }
 
 

@@ -135,12 +135,10 @@ class KancitKckpsBoeSpider(CityScrapersSpider):
     }
 
     # Location constants
-    CENTRAL_OFFICE = (
-        "Kansas City, Kansas Public Schools - Central Office and Training Center"
-    )
-    BASE_ADDRESS = "2010 N. 59th Street"
-    BOARD_ROOM = f"{BASE_ADDRESS}, Third Floor Board Room"
-    EAST_WING = f"{BASE_ADDRESS}, Third Floor East Wing"
+    CENTRAL_OFFICE = "Kansas Public Schools"
+    ADDRESS = "2010 N. 59th Street, Kansas City, Kansas 66103"
+    BOARD_ROOM = f"{CENTRAL_OFFICE} - Third Floor Board Room"
+    EAST_WING = f"{CENTRAL_OFFICE} - Third Floor East Wing"
 
     LOCATION_MAP = [
         {
@@ -152,7 +150,7 @@ class KancitKckpsBoeSpider(CityScrapersSpider):
         {
             "keyword": "Academic Committee Meeting",
             "extra": None,
-            "address": BASE_ADDRESS,
+            "address": ADDRESS,
             "name": CENTRAL_OFFICE,
         },
         {
@@ -164,38 +162,38 @@ class KancitKckpsBoeSpider(CityScrapersSpider):
         {
             "keyword": "Facilities",
             "extra": "Committee Meeting",
-            "address": EAST_WING,
-            "name": CENTRAL_OFFICE,
+            "address": ADDRESS,
+            "name": EAST_WING,
         },
         {
             "keyword": "Boundary",
             "extra": "Committee Meeting",
-            "address": EAST_WING,
-            "name": CENTRAL_OFFICE,
+            "address": ADDRESS,
+            "name": EAST_WING,
         },
         {
             "keyword": "Special Board Meeting Agenda",
             "extra": None,
-            "address": BOARD_ROOM,
-            "name": CENTRAL_OFFICE,
+            "address": ADDRESS,
+            "name": BOARD_ROOM,
         },
         {
             "keyword": "Special",
             "extra": None,
-            "address": BASE_ADDRESS,
-            "name": CENTRAL_OFFICE,
-        },
-        {
-            "keyword": "Regular Meeting Agenda",
-            "extra": None,
-            "address": BOARD_ROOM,
+            "address": ADDRESS,
             "name": CENTRAL_OFFICE,
         },
         {
             "keyword": "Regular Board Meeting Agenda",
             "extra": None,
-            "address": BOARD_ROOM,
-            "name": CENTRAL_OFFICE,
+            "address": ADDRESS,
+            "name": BOARD_ROOM,
+        },
+        {
+            "keyword": "Regular Meeting Agenda",
+            "extra": None,
+            "address": ADDRESS,
+            "name": BOARD_ROOM,
         },
     ]
 
@@ -250,10 +248,14 @@ class KancitKckpsBoeSpider(CityScrapersSpider):
         links = []
         meeting_id = item.get("Id")
         if meeting_id:
-            links.append(
-                {
-                    "href": f"{self.link_url}?Org=Cal&Id={meeting_id}",
-                    "title": "Meeting Details",
-                }
-            )
+            try:
+                validated_id = int(meeting_id)
+                links.append(
+                    {
+                        "href": f"{self.link_url}?Org=Cal&Id={validated_id}",
+                        "title": "Meeting Details",
+                    }
+                )
+            except (ValueError, TypeError):
+                pass
         return links
