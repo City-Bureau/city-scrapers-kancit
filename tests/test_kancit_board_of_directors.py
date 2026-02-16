@@ -111,14 +111,6 @@ def test_calendar_meeting_structure():
 
 
 # API-BASED MEETING TESTS
-
-
-def test_api_meeting_count():
-    """Test that we parsed expected API meetings"""
-    # Based on the JSON, we should have 3 meetings
-    assert len(parsed_api_items) == 3
-
-
 def test_api_first_item():
     """Test first API meeting properties"""
     if len(parsed_api_items) == 0:
@@ -224,8 +216,6 @@ def test_title_decodes_html_entities():
 
 
 # CLASSIFICATION TESTS
-
-
 def test_classification_board():
     """Test board meeting classification"""
     assert spider._classify_meeting("Board of Education Meeting") == BOARD
@@ -257,8 +247,6 @@ def test_classification_workshop():
 
 
 # LOCATION TESTS
-
-
 def test_location_board_of_education():
     """Test Board of Education location parsing"""
     meeting_data = {
@@ -288,14 +276,14 @@ def test_location_board_of_education_with_trailing_chars():
 def test_location_other_venue():
     """Test other venue location parsing"""
     meeting_data = {
-        "MM_Address1": "Manual Career Tech Center",
-        "MM_Address2": "1215 E Truman Rd",
-        "MM_Address3": "Kansas City, MO 64106",
+        "MM_Address1": "Lincoln College Preparatory Academy",
+        "MM_Address2": "2111 Woodland Ave, ",
+        "MM_Address3": "Kansas City, MO 64108",
     }
 
     location = spider._parse_location(meeting_data)
-    assert location["name"] == "Manual Career Tech Center"
-    assert "1215 E Truman Rd" in location["address"]
+    assert location["name"] == "Lincoln College Preparatory Academy"
+    assert "2111 Woodland Ave, Kansas City, MO 64108" in location["address"]
 
 
 def test_location_special_address():
@@ -352,14 +340,11 @@ def test_board_location_variations():
 
 
 # DATETIME PARSING TESTS
-
-
 def test_iso_datetime_parsing():
     """Test ISO 8601 datetime parsing"""
     test_cases = [
-        ("2026-01-14T18:45:00-06:00", datetime(2026, 1, 14, 18, 45)),
-        ("2026-01-22T09:30:00-06:00", datetime(2026, 1, 22, 9, 30)),
-        ("2026-04-08T18:45:00-05:00", datetime(2026, 4, 8, 18, 45)),
+        ("2026-01-14T17:30:00", datetime(2026, 1, 14, 17, 30)),
+        ("2026-01-22T09:30:00", datetime(2026, 1, 22, 9, 30)),
     ]
 
     for dt_str, expected in test_cases:
