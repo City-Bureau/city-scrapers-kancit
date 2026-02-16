@@ -303,13 +303,52 @@ def test_location_special_address():
     meeting_data = {
         "MM_Address1": "1215 E Truman Rd",
         "MM_Address2": "Kansas City, MO 64106",
+        "MM_Address3": "Cardinal -B Room",
+    }
+
+    location = spider._parse_location(meeting_data)
+    assert location["name"] == "Cardinal -B Room"
+    assert "1215 E Truman Rd, Kansas City, MO 64106" in location["address"]
+
+
+def test_location_virtual():
+    """Test virtual meeting location parsing"""
+    meeting_data = {
+        "MM_Address1": "ZOOM meeting",
+        "MM_Address2": "",
         "MM_Address3": "",
     }
 
     location = spider._parse_location(meeting_data)
-    # Based on your spider code, this should result in empty name
-    assert location["name"] == ""
-    assert "Kansas City, MO 64106" in location["address"]
+    assert location["name"] == "Virtual"
+    assert location["address"] == ""
+
+
+def test_location_hybrid():
+    """Test hybrid meeting location parsing"""
+    meeting_data = {
+        "MM_Address1": "2901 Troost Ave",
+        "MM_Address2": "Microsoft Teams meeting ",
+        "MM_Address3": "Virtual - TEAM",
+    }
+
+    location = spider._parse_location(meeting_data)
+    assert location["name"] == "Board of Education (Hybrid Meeting)"
+    assert "2901 Troost Ave" in location["address"]
+    assert "Kansas City, MO 64109" in location["address"]
+
+
+def test_board_location_variations():
+    """Test various Board of Education location name variations"""
+    meeting_data = {
+        "MM_Address1": "2901 Troost Ave",
+        "MM_Address2": "Kansas City, MO 64109",
+        "MM_Address3": "Seven Oaks Room",
+    }
+    location = spider._parse_location(meeting_data)
+    assert location["name"] == "Board of Education"
+    assert "2901 Troost Ave" in location["address"]
+    assert "Kansas City, MO 64109" in location["address"]
 
 
 # DATETIME PARSING TESTS

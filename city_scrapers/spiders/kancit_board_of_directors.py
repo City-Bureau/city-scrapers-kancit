@@ -16,13 +16,14 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
 
     custom_settings = {
         "ROBOTSTXT_OBEY": False,
-        "DOWNLOAD_DELAY": 1,
+        "DOWNLOAD_DELAY": 3,
+        "RANDOMIZE_DOWNLOAD_DELAY": True,
         "COOKIES_ENABLED": True,
         # Mimics a real browser to avoid blocking
         "DEFAULT_REQUEST_HEADERS": {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
             "Accept-Language": "en-US,en;q=0.5",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36", # noqa
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",  # noqa
         },
     }
 
@@ -36,11 +37,14 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
     calendar_base_url = "https://www.kcpublicschools.org/about/board-of-directors"
 
     # Set to track upcoming meeting dates from Simbli to avoid duplicates with calendar meetings # noqa
-    simbli_upcoming_dates = set()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.simbli_upcoming_dates = set()
 
-    def start_requests(self):
+    async def start(self):
         """
         Requests the Simbli main page for token extraction.
+        New async start method for Scrapy 2.13+
         """
         yield scrapy.Request(
             url=self.main_url,
@@ -128,19 +132,18 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
 
         location_text = event_elem.css(".fsLocation::text").get()
         location_name = location_text.strip() if location_text else ""
-        
+
         # Set address for Board of Education
         if location_name == "Board of Education":
-            location_address = "2901 Troost Ave, Kansas City, MO"
-            
+            location_address = "2901 Troost Ave, Kansas City, MO 64109"
+
         else:
             location_address = ""
-        
+
         location = {
             "name": location_name,
             "address": location_address,
         }
-
 
         return self._create_meeting(
             title=normalized_title,
@@ -337,7 +340,7 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
             start=start,
             end=None,
             all_day=False,
-            time_notes="",
+            time_notes="Please refer to the meeting attachments for more accurate information about the meeting details, address and time",  # noqa
             location=location,
             links=links,
             source=source,
@@ -401,33 +404,129 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
         return None
 
     def _parse_location(self, meeting_data):
-        """Parse meeting location from Simbli meeting data"""
+        """Parse and normalize meeting location from Simbli data"""
 
         address1 = (meeting_data.get("MM_Address1") or "").strip()
         address2 = (meeting_data.get("MM_Address2") or "").strip()
         address3 = (meeting_data.get("MM_Address3") or "").strip()
 
-        # Normalize address1 for comparison
         normalized_address1 = address1.rstrip(".,").lower()
+        normalized_address2 = address2.rstrip(".,").lower()
+        normalized_address3 = address3.rstrip(".,").lower()
 
-        # Special known locations
-        if normalized_address1 == "2901 troost ave":
-            location_name = "Board of Education"
-            location_address = " ".join(filter(None, [address1, address2, address3]))
+        full_text = " ".join(
+            filter(
+                None, [normalized_address1, normalized_address2, normalized_address3]
+            )
+        )
 
-        elif normalized_address1 == "1215 e truman rd":
-            location_name = ""
-            location_address = " ".join(filter(None, [address1, address2, address3]))
+        BOARD_ADDRESS = "2901 Troost Ave, Kansas City, MO 64109"
 
-        elif "kcps board of education" in normalized_address1 and "westport room" in normalized_address1:
-            location_name = address1
-            location_address = "2901 Troost Ave, Kansas City, MO"
+        # Board of Education (2901 Troost) — versions
+        TROOST_VARIATIONS = [
+            "2901 troost ave",
+            "2901 troost avenue",
+            "2901 troost",
+            "board auditorium",
+            "board of education building",
+            "board of education",
+            "board room",
+            "kcps board of education building",
+            "delano",
+        ]
 
-        else:
-            location_name = address1
-            location_address = " ".join(filter(None, [address2, address3]))
+        # Virtual / Remote Meetings
+        VIRTUAL_KEYWORDS = [
+            "conference call",
+            "videoconference",
+            "video conference",
+            "conference call",
+            "teleconference",
+            "via teleconference",
+            "livestream",
+            "live stream",
+            "via zoom",
+            "virtual",
+            "live at",
+            "kcpublicschools.org/live",
+            "816.418.1113",
+            "816-418-1113",
+            "zoom",
+        ]
 
-        return {"name": location_name, "address": location_address.strip()}
+        TEAMS_KEYWORDS = [
+            "teams",
+            "msteams",
+        ]
+
+        is_board_troost_variation = any(v in full_text for v in TROOST_VARIATIONS)
+        is_virtual = any(keyword in full_text for keyword in VIRTUAL_KEYWORDS)
+        is_teams = any(keyword in full_text for keyword in TEAMS_KEYWORDS)
+
+        # ✅ HYBRID (Board of Education + Virtual)
+        if is_board_troost_variation and is_virtual:
+            #       Optional: extract room name if present
+            room_match = re.search(
+                r"(delano room|board room|westport room)",
+                full_text,
+                re.IGNORECASE,
+            )
+
+            if room_match:
+                room_name = room_match.group(1).title()
+                name = f"{room_name} (Hybrid Meeting)"
+            else:
+                name = "Board of Education (Hybrid Meeting)"
+
+            return {
+                "name": name,
+                "address": BOARD_ADDRESS,
+            }
+        # ✅ Physical Board Only
+        elif is_board_troost_variation:
+            return {
+                "name": "Board of Education",
+                "address": BOARD_ADDRESS,
+            }
+
+        # ✅ Virtual and Teams
+        elif is_teams and is_virtual:
+            return {
+                "name": address1,
+                "address": "",
+            }
+
+        elif is_virtual:
+            return {
+                "name": "Virtual",
+                "address": "",
+            }
+
+        # 1215 E Truman Rd — Cardinal -B Room
+        if (
+            "1215 e truman rd" in normalized_address1
+            and "cardinal -b room" in normalized_address3
+        ):
+            return {
+                "name": "Cardinal -B Room",
+                "address": "1215 E Truman Rd, Kansas City, MO 64106",
+            }
+
+        # Fallback — keep original structure
+        location_name = address1
+        location_address = " ".join(filter(None, [address2, address3])).strip()
+
+        if location_address:
+            normalized_location_address = location_address.lower()
+
+            # If contains "2901 troost" anywhere → force canonical address
+            if "2901 troost" in normalized_location_address:
+                location_address = BOARD_ADDRESS
+
+        return {
+            "name": location_name,
+            "address": location_address,
+        }
 
     def _extract_meetings_from_response(self, data):
         """Extract meetings list from various JSON response structures"""
