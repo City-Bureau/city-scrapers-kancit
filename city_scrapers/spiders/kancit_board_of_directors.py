@@ -290,7 +290,7 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
                 return
 
             for meeting_data in meetings:
-                meeting = self.parse__simbli_meeting(meeting_data)
+                meeting = self._parse_simbli_meeting(meeting_data)
                 if meeting:
                     yield meeting
 
@@ -305,7 +305,7 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
         except json.JSONDecodeError:
             pass
 
-    def parse__simbli_meeting(self, meeting_data):
+    def _parse_simbli_meeting(self, meeting_data):
         """
         Parse individual meeting data.
         Converts Simbli meeting data into a Meeting object.
