@@ -8,7 +8,6 @@ from city_scrapers_core.constants import (
     NOT_CLASSIFIED,
     PASSED,
     TENTATIVE,
-    CANCELLED,
 )
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.utils import file_response
@@ -35,7 +34,7 @@ def test_api_response():
         join(dirname(__file__), "files", "kancit_board_of_directors.json"),
         url="https://simbli.eboardsolutions.com/Services/api/GetMeetingListing",
     )
-    
+
     response.request = Request(
         url=response.url,
         meta={
@@ -44,7 +43,7 @@ def test_api_response():
             "security_token": "test_security_token",
         },
     )
-    
+
     return response
 
 
@@ -149,7 +148,7 @@ def test_api_first_item(parsed_api_items):
 
     assert len(item["links"]) == 1
     assert (
-        "https://simbli.eboardsolutions.com/SB_Meetings/ViewMeeting.aspx?S=228&MID=23208"
+        "https://simbli.eboardsolutions.com/SB_Meetings/ViewMeeting.aspx?S=228&MID=23208"  # noqa
         in item["links"][0]["href"]
     )
     assert item["links"][0]["title"] == "Meeting details"
