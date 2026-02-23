@@ -1,0 +1,86 @@
+[
+  {
+    "Id": 574,
+    "Name": "Academic Committee Meeting  - Oct 28 2025",
+    "MeetingTypeName": "Academic Committee Meeting",
+    "MeetingDateTime": "2025-10-28 10:00",
+    "MeetingLocation": "Kansas City Kansas Public Schools"
+  },
+  {
+    "Id": 584,
+    "Name": "Finance Committee Meeting  - May 01 2026",
+    "MeetingTypeName": "Finance Committee Meeting ",
+    "MeetingDateTime": "2026-05-01 13:00",
+    "MeetingLocation": "Kansas City Kansas Public Schools"
+  },
+  {
+    "Id": 586,
+    "Name": "Facilities  Committee Meeting  - Oct 30 2025",
+    "MeetingTypeName": "Facilities  Committee Meeting ",
+    "MeetingDateTime": "2025-10-30 13:00",
+    "MeetingLocation": "Kansas City Kansas Public Schools"
+  },
+  {
+    "Id": 277,
+    "Name": "Board Retreat Agenda - Feb 22 2020",
+    "MeetingTypeName": "BoardDocs Imported Meetings",
+    "MeetingDateTime": "2020-02-22 00:00",
+    "MeetingLocation": ""
+  },
+  {
+    "Id": 522,
+    "Name": "Boundary Committee Meeting - Jul 17 2025",
+    "MeetingTypeName": "Boundary Committee Meeting",
+    "MeetingDateTime": "2025-07-17 17:30",
+    "MeetingLocation": "Kansas City Kansas Public School"
+  },
+  {
+    "Id": 186,
+    "Name": "Regular Board Meeting Agenda 2021 - Oct 26 2021",
+    "MeetingTypeName": "BoardDocs Imported Meetings",
+    "MeetingDateTime": "2021-10-26 00:00",
+    "MeetingLocation": ""
+  },
+  {
+    "Id": 188,
+    "Name": "Regular Meeting Agenda - Sep 28 2021",
+    "MeetingTypeName": "BoardDocs Imported Meetings",
+    "MeetingDateTime": "2021-09-28 00:00",
+    "MeetingLocation": ""
+  },
+  {
+    "Id": 564,
+    "Name": "Regular Meeting Agenda - Current  - Mar 24 2026",
+    "MeetingTypeName": "Regular Meeting Agenda - Current ",
+    "MeetingDateTime": "2026-03-24 09:00",
+    "MeetingLocation": "Kansas City Kansas Public Schools"
+  },
+  {
+    "Id": 538,
+    "Name": "Special Board Meeting Agenda June 2, 2025 - Jun 02 2025",
+    "MeetingTypeName": "Board Retreat Agenda",
+    "MeetingDateTime": "2025-06-02 00:00",
+    "MeetingLocation": ""
+  },
+  {
+    "Id": 545,
+    "Name": "Regular Board Meeting Agenda 2025 - Apr 22 2025",
+    "MeetingTypeName": "Board Retreat Agenda",
+    "MeetingDateTime": "2025-04-22 00:00",
+    "MeetingLocation": ""
+  },
+  {
+    "Id": 573,
+    "Name": "Special Meeting Agenda - Mar 28 2026",
+    "MeetingTypeName": "Special Meeting Agenda",
+    "MeetingDateTime": "2026-03-28 12:00",
+    "MeetingLocation": "Kansas City Kansas Public Schools"
+  },
+  {
+    "Id": 593,
+    "Name": "Special (Budget) Meeting Agenda - Feb 06 2026",
+    "MeetingTypeName": "Special Meeting Agenda",
+    "MeetingDateTime": "2026-02-06 13:00",
+    "MeetingLocation": "Kansas City Kansas Public Schools"
+  }
+]
