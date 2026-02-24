@@ -1,12 +1,13 @@
 import html
 import json
 import re
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import scrapy
 from city_scrapers_core.constants import BOARD, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+from dateutil.relativedelta import relativedelta
 
 
 class KancitHickmanMillsPubScDisSpider(CityScrapersSpider):
@@ -99,16 +100,6 @@ class KancitHickmanMillsPubScDisSpider(CityScrapersSpider):
         if any(d in t for d in deny):
             return False
         return any(a in t for a in allow)
-
-    def parse_calendar_page(self, response):
-        try:
-            self.logger.info(
-                f"[Calendar] {response.status} len={len(response.text)} url={response.url}"  # noqa
-            )
-        except AttributeError:
-            self.logger.info(f"[Calendar] {response.status} url={response.url}")
-
-        yield from self.fetch_calendar_meetings()
 
     def parse(self, response):
         """Parse Simbli listing page → extract tokens → start API paging."""
@@ -239,16 +230,16 @@ class KancitHickmanMillsPubScDisSpider(CityScrapersSpider):
         return None
 
     def _parse_simbli_meeting(self, meeting_data):
+        now = datetime.now()
         start = self._parse_start_time(meeting_data)
         if not start:
             return None
 
-        if start.date() >= datetime.now().date():
+        if start.date() >= now.date():
             self.simbli_upcoming_dates.add(start.date())
 
-        now = datetime.now()
-        one_year_ago = now - timedelta(days=365)
-        one_year_future = now + timedelta(days=365)
+        one_year_ago = now - relativedelta(years=1)
+        one_year_future = now + relativedelta(years=1)
 
         if start < one_year_ago or start > one_year_future:
             return None
@@ -341,13 +332,14 @@ class KancitHickmanMillsPubScDisSpider(CityScrapersSpider):
         address2 = (meeting_data.get("MM_Address2") or "").strip()
         address3 = (meeting_data.get("MM_Address3") or "").strip()
 
-        normalized_address1 = address1.rstrip(".,").lower()
-        normalized_address2 = address2.rstrip(".,").lower()
-        normalized_address3 = address3.rstrip(".,").lower()
-
         full_text = " ".join(
             filter(
-                None, [normalized_address1, normalized_address2, normalized_address3]
+                None,
+                [
+                    address1.rstrip(".,").lower(),
+                    address2.rstrip(".,").lower(),
+                    address3.rstrip(".,").lower(),
+                ],
             )
         )
 
@@ -409,12 +401,9 @@ class KancitHickmanMillsPubScDisSpider(CityScrapersSpider):
         today = datetime.now()
 
         for i in range(12):
-            target_month = today.month + i
-            target_year = today.year
-
-            while target_month > 12:
-                target_month -= 12
-                target_year += 1
+            target_date = today + relativedelta(months=i)
+            target_month = target_date.month
+            target_year = target_date.year
 
             cal_date = f"{target_year}-{target_month:02d}-01"
             params = {
@@ -424,7 +413,7 @@ class KancitHickmanMillsPubScDisSpider(CityScrapersSpider):
                 "page_id": "450",
                 "parent_id": "9768",
                 # Add a random timestamp to the URL to prevent caching
-                "_": str(int(datetime.now().timestamp() * 1000) + i),
+                "_": str(int(today.timestamp() * 1000) + i),
             }
 
             url = f"{self.calendar_url}?" + "&".join(
@@ -475,13 +464,13 @@ class KancitHickmanMillsPubScDisSpider(CityScrapersSpider):
             return None
 
         now = datetime.now()
-        one_year_ago = now - timedelta(days=365)
-        one_year_future = now + timedelta(days=365)
+        one_year_ago = now - relativedelta(years=1)
+        one_year_future = now + relativedelta(years=1)
 
         if start < one_year_ago or start > one_year_future:
             return None
 
-        if start.date() < datetime.now().date():
+        if start < datetime.now():
             return None
 
         if start.date() in self.simbli_upcoming_dates:
