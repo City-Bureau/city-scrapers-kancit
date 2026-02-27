@@ -42,7 +42,7 @@ class KancitHickmanMillsPubScDisSpider(CityScrapersSpider):
         self.simbli_upcoming_dates = set()
         self.seen_calendar_keys = set()
 
-    async def start(self):
+    def start_requests(self):
         """
         Requests the Simbli main page for token extraction.
         New async start method for Scrapy 2.13+
@@ -273,7 +273,7 @@ class KancitHickmanMillsPubScDisSpider(CityScrapersSpider):
         title = (
             meeting_data.get("MM_MeetingTitle")
             or meeting_data.get("MeetingTitle")
-            or "Meeting"
+            or "Untitled Meeting"
         ).strip()
 
         return Meeting(
@@ -313,17 +313,6 @@ class KancitHickmanMillsPubScDisSpider(CityScrapersSpider):
         except Exception:
             return None
 
-    def _parse_end(self, item):
-        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        return None
-
-    def _parse_time_notes(self, item):
-        """Parse any additional notes on the timing of the meeting"""
-        return ""
-
-    def _parse_all_day(self, item):
-        """Parse or generate all-day status. Defaults to False."""
-        return False
 
     def _parse_location(self, meeting_data):
         """Parse and normalize meeting location from Simbli data"""
