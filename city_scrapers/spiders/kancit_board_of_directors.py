@@ -41,10 +41,9 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
         super().__init__(*args, **kwargs)
         self.simbli_upcoming_dates = set()
 
-    async def start(self):
+    def start_requests(self):
         """
         Requests the Simbli main page for token extraction.
-        New async start method for Scrapy 2.13+
         """
         yield scrapy.Request(
             url=self.main_url,
@@ -354,7 +353,6 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
     def _normalize_title(self, title):
         """Remove date patterns and clean up meeting titles"""
         # Decode HTML entities
-        # title = title.replace("&amp;", "&")
         title = html.unescape(title)
 
         # Remove date patterns
@@ -440,7 +438,6 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
             "conference call",
             "videoconference",
             "video conference",
-            "conference call",
             "teleconference",
             "via teleconference",
             "livestream",
@@ -463,7 +460,7 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
         is_virtual = any(keyword in full_text for keyword in VIRTUAL_KEYWORDS)
         is_teams = any(keyword in full_text for keyword in TEAMS_KEYWORDS)
 
-        # ✅ HYBRID (Board of Education + Virtual)
+        # HYBRID (Board of Education + Virtual)
         if is_board_troost_variation and is_virtual:
             #       Optional: extract room name if present
             room_match = re.search(
@@ -482,14 +479,14 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
                 "name": name,
                 "address": BOARD_ADDRESS,
             }
-        # ✅ Physical Board Only
+        # Physical Board Only
         elif is_board_troost_variation:
             return {
                 "name": "Board of Education",
                 "address": BOARD_ADDRESS,
             }
 
-        # ✅ Virtual and Teams
+        # Virtual and Teams
         elif is_teams and is_virtual:
             return {
                 "name": address1,
