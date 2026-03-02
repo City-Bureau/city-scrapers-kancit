@@ -41,11 +41,8 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
         super().__init__(*args, **kwargs)
         self.simbli_upcoming_dates = set()
 
-    async def start(self):
-        """
-        Requests the Simbli main page for token extraction.
-        New async start method for Scrapy 2.13+
-        """
+    def start_requests(self):
+        """Requests the Simbli main page for token extraction."""
         yield scrapy.Request(
             url=self.main_url,
             callback=self.parse,
