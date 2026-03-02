@@ -313,7 +313,6 @@ class KancitHickmanMillsPubScDisSpider(CityScrapersSpider):
         except Exception:
             return None
 
-
     def _parse_location(self, meeting_data):
         """Parse and normalize meeting location from Simbli data"""
 
