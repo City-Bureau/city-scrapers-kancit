@@ -46,9 +46,12 @@ def run_spider(spider_name, output_dir):
         spider_name,
         "-O",
         str(output_file),
-        "-s", "LOG_LEVEL=ERROR",
-        "-s", "CONCURRENT_REQUESTS=16",
-        "-s", "DOWNLOAD_DELAY=0",
+        "-s",
+        "LOG_LEVEL=ERROR",
+        "-s",
+        "CONCURRENT_REQUESTS=16",
+        "-s",
+        "DOWNLOAD_DELAY=0",
     ]
 
     result = subprocess.run(
