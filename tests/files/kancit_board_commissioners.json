@@ -112,6 +112,60 @@
         "zipCode": "66101"
       },
       "publishedFiles": []
+    },
+    {
+      "id": 3005,
+      "eventName": "8.15.24 Board of Commission Special Meeting",
+      "eventDescription": "Test leading date format",
+      "startDateTime": "2024-08-15T14:00:00Z",
+      "endDateTime": "2024-08-15T16:00:00Z",
+      "categoryId": 31,
+      "eventLocation": {
+        "id": 1005,
+        "eventId": 0,
+        "address1": "701 N 7th Street",
+        "address2": null,
+        "city": "Kansas City",
+        "state": "KS",
+        "zipCode": "66101"
+      },
+      "publishedFiles": []
+    },
+    {
+      "id": 3006,
+      "eventName": "10.12.23 Full Commission Special Session",
+      "eventDescription": "Test leading date format",
+      "startDateTime": "2023-10-12T17:30:00Z",
+      "endDateTime": "2023-10-12T19:30:00Z",
+      "categoryId": 31,
+      "eventLocation": {
+        "id": 1006,
+        "eventId": 0,
+        "address1": "701 N 7th Street",
+        "address2": null,
+        "city": "Kansas City",
+        "state": "KS",
+        "zipCode": "66101"
+      },
+      "publishedFiles": []
+    },
+    {
+      "id": 3007,
+      "eventName": "8/10/23 Full Commission Special Session",
+      "eventDescription": "Test leading date with slashes",
+      "startDateTime": "2023-08-10T17:30:00Z",
+      "endDateTime": "2023-08-10T19:30:00Z",
+      "categoryId": 31,
+      "eventLocation": {
+        "id": 1007,
+        "eventId": 0,
+        "address1": "701 N 7th Street",
+        "address2": null,
+        "city": "Kansas City",
+        "state": "KS",
+        "zipCode": "66101"
+      },
+      "publishedFiles": []
     }
   ]
 }
