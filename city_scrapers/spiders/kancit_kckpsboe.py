@@ -1,5 +1,5 @@
 import re
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from urllib.parse import urlencode
 
 import scrapy
@@ -31,7 +31,7 @@ class KancitKckpsBoeSpider(CityScrapersSpider):
             "from": from_date,
             "to": to_date,
             "loadall": "false",
-            "_": int(datetime.utcnow().timestamp() * 1000),  # cache buster
+            "_": int(datetime.now(timezone.utc).timestamp() * 1000),  # cache buster
         }
         url = f"{self.meetings_api_url}?{urlencode(params)}"
         yield scrapy.Request(url=url, callback=self.parse)
@@ -76,14 +76,8 @@ class KancitKckpsBoeSpider(CityScrapersSpider):
         title = self._get_raw_title(item)
 
         # Remove time information first
-        time_patterns = [
-            r"\s+at\s+\d{1,2}:\d{2}\s*(?:a\.?m\.?|p\.?m\.?)",  # "at 4:00 PM"
-            r"\s+\d{1,2}:\d{2}\s*(?:a\.?m\.?|p\.?m\.?)",  # "4:00 PM"
-            r"\s+\d{1,2}\s*(?:a\.?m\.?|p\.?m\.?)",  # "9 AM"
-        ]
-
-        for pattern in time_patterns:
-            title = re.sub(pattern, "", title, flags=re.IGNORECASE)
+        for pattern in self.TIME_PATTERNS:
+            title = pattern.sub("", title)
 
         title = title.replace(" - Current", "")
 
@@ -95,18 +89,11 @@ class KancitKckpsBoeSpider(CityScrapersSpider):
             title = parts[0].strip()
 
         # Pattern 2: Remove specific date patterns
-        date_patterns = [
-            r"\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{1,2},?\s+\d{4}$",  # "April 17, 2025" # noqa
-            r"\s+\d{1,2}/\d{1,2}/\d{4}$",  # "02/21/2025"
-            r"\s+\d{4}$",  # "2025" at end
-            r"\s+\d{1,2},\s+\d{4}$",  # "21, 2025"
-        ]
-
-        for pattern in date_patterns:
-            title = re.sub(pattern, "", title, flags=re.IGNORECASE)
+        for pattern in self.DATE_PATTERNS:
+            title = pattern.sub("", title)
 
         # Normalize whitespace
-        return re.sub(r"\s+", " ", title).strip()
+        return self.WHITESPACE_PATTERN.sub(" ", title).strip()
 
     def _parse_classification(self, item):
         """Parse or generate classification from allowed options."""
@@ -125,7 +112,7 @@ class KancitKckpsBoeSpider(CityScrapersSpider):
             "Special (Budget) Meeting Agenda",
             "Special Board Meeting Agenda",
             "Special Joint Meeting Agenda",
-            "Aug 1, 2014 (Fri)",
+            "Aug 1, 2014 (Fri)",  # Edge case: specific BoardDocs import with non-standard title format # noqa
         ],
         17: [
             "Regular Meeting Agenda - Current",
@@ -133,6 +120,23 @@ class KancitKckpsBoeSpider(CityScrapersSpider):
             "Regular Board Meeting Agenda",
         ],
     }
+
+    TIME_PATTERNS = [
+        re.compile(r"\s+at\s+\d{1,2}:\d{2}\s*(?:a\.?m\.?|p\.?m\.?)"),  # "at 4:00 PM"
+        re.compile(r"\s+\d{1,2}:\d{2}\s*(?:a\.?m\.?|p\.?m\.?)"),  # "4:00 PM"
+        re.compile(r"\s+\d{1,2}\s*(?:a\.?m\.?|p\.?m\.?)"),  # "9 AM"
+    ]
+
+    DATE_PATTERNS = [
+        re.compile(
+            r"\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{1,2},?\s+\d{4}$"  # noqa
+        ),  # "April 17, 2025"
+        re.compile(r"\s+\d{1,2}/\d{1,2}/\d{4}$"),  # "02/21/2025"
+        re.compile(r"\s+\d{4}$"),  # "2025" at end
+        re.compile(r"\s+\d{1,2},\s+\d{4}$"),  # "21, 2025"
+    ]
+
+    WHITESPACE_PATTERN = re.compile(r"\s+")
 
     # Location constants
     CENTRAL_OFFICE = "Kansas Public Schools"
