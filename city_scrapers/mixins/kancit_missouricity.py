@@ -11,7 +11,7 @@ class KancitMissouricityMixinMeta(type):
     """
 
     def __init__(cls, name, bases, dct):
-        required_static_vars = ["agency", "name", "agency"]
+        required_static_vars = ["agency", "name"]
         missing_vars = [var for var in required_static_vars if var not in dct]
 
         if missing_vars:

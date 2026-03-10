@@ -21,7 +21,7 @@ spider_configs = [
             "address": "414 E. 12th Street, Kansas City, MO 64106",
         },
         "description": "{agency} meetings are also held virtually. "
-        "Please check the meeting attachement for details on how to attend.",
+        "Please check the meeting attachment for details on how to attend.",
     },
     {
         "class_name": "KancitSpider002",
@@ -32,7 +32,7 @@ spider_configs = [
             "name": "Community Engagement Center",
             "address": "1512 E 18th Street, Kansas City, MO 64108",
         },
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider003",
@@ -43,7 +43,7 @@ spider_configs = [
             "name": "",
             "address": "",
         },
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider004",
@@ -54,7 +54,7 @@ spider_configs = [
             "name": "",
             "address": "",
         },
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider005",
@@ -65,7 +65,7 @@ spider_configs = [
             "name": "Century Towers",
             "address": "635 Woodland Ave, Kansas City, MO 64124",
         },
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider006",
@@ -77,7 +77,7 @@ spider_configs = [
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
         "description": "{agency} meetings are also held virtually. "
-        "Please check the meeting attachement for details on how to attend.",
+        "Please check the meeting attachment for details on how to attend.",
     },
     {
         "class_name": "KancitSpider007",
@@ -88,7 +88,7 @@ spider_configs = [
             "name": "",
             "address": "",
         },
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider008",
@@ -100,7 +100,7 @@ spider_configs = [
             "address": "",
         },
         "description": "{agency} meetings are also held virtually. "
-        "Please check the meeting attachement for details on how to attend.",
+        "Please check the meeting attachment for details on how to attend.",
     },
     {
         "class_name": "KancitSpider009",
@@ -111,7 +111,7 @@ spider_configs = [
             "name": "",
             "address": "",
         },
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider010",
@@ -122,7 +122,7 @@ spider_configs = [
             "name": "",
             "address": "",
         },
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider011",
@@ -133,7 +133,7 @@ spider_configs = [
             "name": "",
             "address": "",
         },
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider012",
@@ -145,7 +145,7 @@ spider_configs = [
             "address": "1125 Locust St, Kansas City, MO 64106",
         },
         "description": "{agency} meetings are also held virtually. "
-        "Please check the meeting attachement for details on how to attend.",
+        "Please check the meeting attachment for details on how to attend.",
     },
     {
         "class_name": "KancitSpider013",
@@ -156,7 +156,7 @@ spider_configs = [
             "name": "",
             "address": "",
         },
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider014",
@@ -168,7 +168,7 @@ spider_configs = [
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
         "description": "{agency} meetings are also held virtually. "
-        "Please check the meeting attachement for details on how to attend.",
+        "Please check the meeting attachment for details on how to attend.",
     },
     {
         "class_name": "KancitSpider015",
@@ -179,7 +179,7 @@ spider_configs = [
             "name": "",
             "address": "",
         },
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider016",
@@ -191,7 +191,7 @@ spider_configs = [
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
         "description": "{agency} meetings are also held virtually. "
-        "Please check the meeting attachement for details on how to attend.",
+        "Please check the meeting attachment for details on how to attend.",
     },
     {
         "class_name": "KancitSpider017",
@@ -202,7 +202,7 @@ spider_configs = [
             "name": "",
             "address": "",
         },
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider018",
@@ -214,7 +214,7 @@ spider_configs = [
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
         "description": "{agency} meetings are also held virtually. "
-        "Please check the meeting attachement for details on how to attend.",
+        "Please check the meeting attachment for details on how to attend.",
     },
     {
         "class_name": "KancitSpider019",
@@ -225,7 +225,7 @@ spider_configs = [
             "name": "",
             "address": "",
         },
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider020",
@@ -237,7 +237,7 @@ spider_configs = [
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
         "description": "{agency} meetings are also held virtually. "
-        "Please check the meeting attachement for details on how to attend.",
+        "Please check the meeting attachment for details on how to attend.",
     },
     {
         "class_name": "KancitSpider021",
@@ -248,7 +248,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider022",
@@ -256,7 +256,7 @@ spider_configs = [
         "agency": "Citizen's Commission on Municipal Revenue",
         "classification": COMMISSION,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider023",
@@ -264,7 +264,7 @@ spider_configs = [
         "agency": "City Clerk",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider024",
@@ -275,7 +275,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider025",
@@ -283,7 +283,7 @@ spider_configs = [
         "agency": "City Market Oversight Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider026",
@@ -291,7 +291,7 @@ spider_configs = [
         "agency": "City Operations Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider027",
@@ -302,7 +302,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider028",
@@ -310,7 +310,7 @@ spider_configs = [
         "agency": "City's Risk Management Committee's Claims Subcommittee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider029",
@@ -321,7 +321,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider030",
@@ -329,7 +329,7 @@ spider_configs = [
         "agency": "Community Engagement",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider031",
@@ -337,7 +337,7 @@ spider_configs = [
         "agency": "Construction Workforce Board",
         "classification": BOARD,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider032",
@@ -345,7 +345,7 @@ spider_configs = [
         "agency": "Convention Hotel Steering Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider033",
@@ -353,7 +353,7 @@ spider_configs = [
         "agency": "Convention Management Advisory Authority",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider034",
@@ -364,7 +364,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider035",
@@ -372,7 +372,7 @@ spider_configs = [
         "agency": "Crossroads Arts Advisory Committee PIEA",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider036",
@@ -383,7 +383,7 @@ spider_configs = [
             "name": "Suite 500",
             "address": "1010 Walnut St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider037",
@@ -394,7 +394,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider038",
@@ -402,7 +402,7 @@ spider_configs = [
         "agency": "Dog Park Master Plan Task Force",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider039",
@@ -410,7 +410,7 @@ spider_configs = [
         "agency": "Downtown Economic Stimulus Authority",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider040",
@@ -421,7 +421,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider041",
@@ -429,7 +429,7 @@ spider_configs = [
         "agency": "Economic Development Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider042",
@@ -440,7 +440,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider043",
@@ -448,7 +448,7 @@ spider_configs = [
         "agency": "Economic Development Corporation Board of Directors",
         "classification": BOARD,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider044",
@@ -456,7 +456,7 @@ spider_configs = [
         "agency": "Emergency Medical Services Coordinating Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider045",
@@ -464,7 +464,7 @@ spider_configs = [
         "agency": "Emergency Medical Services Coordination Committee (EMSCC)",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider046",
@@ -472,7 +472,7 @@ spider_configs = [
         "agency": "Emerging Technology Board",
         "classification": BOARD,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider047",
@@ -483,7 +483,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider048",
@@ -494,7 +494,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider049",
@@ -502,7 +502,7 @@ spider_configs = [
         "agency": "Environmental Management Commission",
         "classification": COMMISSION,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider050",
@@ -510,7 +510,7 @@ spider_configs = [
         "agency": "EPA Response Team",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider051",
@@ -518,7 +518,7 @@ spider_configs = [
         "agency": "Equity Task Force",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider052",
@@ -529,7 +529,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider053",
@@ -537,7 +537,7 @@ spider_configs = [
         "agency": "F & G and T & I Joint Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider054",
@@ -548,7 +548,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider055",
@@ -556,7 +556,7 @@ spider_configs = [
         "agency": "Fairness In Professional Goods & Services Board",
         "classification": BOARD,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider056",
@@ -564,7 +564,7 @@ spider_configs = [
         "agency": "Finance & Administration Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider057",
@@ -572,7 +572,7 @@ spider_configs = [
         "agency": "Finance and Audit Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider058",
@@ -580,7 +580,7 @@ spider_configs = [
         "agency": "Finance and Governance Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider059",
@@ -588,7 +588,7 @@ spider_configs = [
         "agency": "Finance Governance &  Ethics  Work Session",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider060",
@@ -596,7 +596,7 @@ spider_configs = [
         "agency": "Finance, Governance & Ethics Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider061",
@@ -604,7 +604,7 @@ spider_configs = [
         "agency": "Finance, Governance & Neighborhoods Joint Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider062",
@@ -612,7 +612,7 @@ spider_configs = [
         "agency": "Finance, Governance and Ethics Committee and Public Safety and Emergency Services Committee",  # noqa
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider063",
@@ -623,7 +623,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider064",
@@ -634,7 +634,7 @@ spider_configs = [
             "name": "Century Towers",
             "address": "635 Woodland Ave, Kansas City, MO 64124",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider065",
@@ -642,7 +642,7 @@ spider_configs = [
         "agency": "Focused Deterrence Governing Board",
         "classification": BOARD,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider066",
@@ -653,7 +653,7 @@ spider_configs = [
             "name": "KCMO Health Department",
             "address": "2400 Troost Ave, Kansas City, MO 64108",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider067",
@@ -661,7 +661,7 @@ spider_configs = [
         "agency": "Health Foward Foundation - Community Advisory Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider068",
@@ -672,7 +672,7 @@ spider_configs = [
             "name": "Century Towers",
             "address": "635 Woodland Ave, Kansas City, MO 64124",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider069",
@@ -683,7 +683,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider070",
@@ -691,7 +691,7 @@ spider_configs = [
         "agency": "HomelessTask Force",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider071",
@@ -702,7 +702,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider072",
@@ -710,7 +710,7 @@ spider_configs = [
         "agency": "Houseless Taskforce",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider073",
@@ -718,7 +718,7 @@ spider_configs = [
         "agency": "Housing & Community Development Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider074",
@@ -726,7 +726,7 @@ spider_configs = [
         "agency": "Housing and Planning, Zoning & Economic Development Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider075",
@@ -734,7 +734,7 @@ spider_configs = [
         "agency": "Housing Authority",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider076",
@@ -742,7 +742,7 @@ spider_configs = [
         "agency": "Housing Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider077",
@@ -750,7 +750,7 @@ spider_configs = [
         "agency": "Housing Committee Worksession",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider078",
@@ -761,7 +761,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider079",
@@ -769,7 +769,7 @@ spider_configs = [
         "agency": "Human Relations",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider080",
@@ -780,7 +780,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider081",
@@ -788,7 +788,7 @@ spider_configs = [
         "agency": "Independence Avenue Special Design Review Districts",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider082",
@@ -796,7 +796,7 @@ spider_configs = [
         "agency": "International Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider083",
@@ -804,7 +804,7 @@ spider_configs = [
         "agency": "International Energy Conservation Code",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider084",
@@ -815,7 +815,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider085",
@@ -823,7 +823,7 @@ spider_configs = [
         "agency": "Jackson County Board of Equalization",
         "classification": BOARD,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider086",
@@ -831,7 +831,7 @@ spider_configs = [
         "agency": "Jazz District Redevelopment Corp.",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider087",
@@ -839,7 +839,7 @@ spider_configs = [
         "agency": "Joint Committee of Finance and Special Committee on Housing Policy",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider088",
@@ -847,7 +847,7 @@ spider_configs = [
         "agency": "Kansas City Board of Election Commissioners",
         "classification": COMMISSION,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider089",
@@ -855,7 +855,7 @@ spider_configs = [
         "agency": "Kansas City Climate Protection Plan Steering Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider090",
@@ -863,7 +863,7 @@ spider_configs = [
         "agency": "Kansas City Climate Protection Steering Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider091",
@@ -871,7 +871,7 @@ spider_configs = [
         "agency": "Kansas City Commission on Violent Crime",
         "classification": COMMISSION,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider092",
@@ -879,7 +879,7 @@ spider_configs = [
         "agency": "Kansas City COVID-19 Vaccine Task Force",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider093",
@@ -887,7 +887,7 @@ spider_configs = [
         "agency": "Kansas City Maintenance Reserve Corporation",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider094",
@@ -895,7 +895,7 @@ spider_configs = [
         "agency": "Kansas City Missouri Parking and Transportation Commission",
         "classification": COMMISSION,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider095",
@@ -903,7 +903,7 @@ spider_configs = [
         "agency": "Kansas City Museum Foundation Board",
         "classification": BOARD,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider096",
@@ -911,7 +911,7 @@ spider_configs = [
         "agency": "Kansas City Redistricting Commission",
         "classification": COMMISSION,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider097",
@@ -919,7 +919,7 @@ spider_configs = [
         "agency": "Kansas City Streetcar Authority",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider098",
@@ -930,7 +930,7 @@ spider_configs = [
             "name": "Century Towers",
             "address": "635 Woodland Ave, Kansas City, MO 64124",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider099",
@@ -938,7 +938,7 @@ spider_configs = [
         "agency": "Kansas City Young Adult City Council",
         "classification": CITY_COUNCIL,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider100",
@@ -949,7 +949,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider101",
@@ -960,7 +960,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider102",
@@ -968,7 +968,7 @@ spider_configs = [
         "agency": "KC Neighborhood Advisory Council",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider103",
@@ -976,7 +976,7 @@ spider_configs = [
         "agency": "KC Parking and Transportation Commission",
         "classification": COMMISSION,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider104",
@@ -984,7 +984,7 @@ spider_configs = [
         "agency": "KC STAT",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider105",
@@ -995,7 +995,7 @@ spider_configs = [
             "name": "KC Water",
             "address": "4800 E 63rd Street, Kansas City, MO 64130",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider106",
@@ -1006,7 +1006,7 @@ spider_configs = [
             "name": "KCMO Health Department",
             "address": "2400 Troost Ave, Kansas City, MO 64108",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider107",
@@ -1017,7 +1017,7 @@ spider_configs = [
             "name": "Breen Conference Room",
             "address": "1200 E. 18th Street Kansas City, MO 64108",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider108",
@@ -1025,7 +1025,7 @@ spider_configs = [
         "agency": "KCATA Funding Review Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider109",
@@ -1036,7 +1036,7 @@ spider_configs = [
             "name": "Directors Conference Room",
             "address": "601 Brasilia Ave, Kansas City, MO 64153",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider110",
@@ -1044,7 +1044,7 @@ spider_configs = [
         "agency": "KCTGA Comprehensive HIV Prevention & Care Plan",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider111",
@@ -1052,7 +1052,7 @@ spider_configs = [
         "agency": "Land Bank Agency",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider112",
@@ -1060,7 +1060,7 @@ spider_configs = [
         "agency": "Land Bank Board of Commissioners",
         "classification": COMMISSION,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider113",
@@ -1071,7 +1071,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider114",
@@ -1079,7 +1079,7 @@ spider_configs = [
         "agency": "Legal Review Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider115",
@@ -1087,7 +1087,7 @@ spider_configs = [
         "agency": "Legislative Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider116",
@@ -1095,7 +1095,7 @@ spider_configs = [
         "agency": "Legislative, Rules and Ethics Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider117",
@@ -1103,7 +1103,7 @@ spider_configs = [
         "agency": "LGBTQ Commission",
         "classification": COMMISSION,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider118",
@@ -1114,7 +1114,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider119",
@@ -1122,7 +1122,7 @@ spider_configs = [
         "agency": "Linwood Shopping Center CID Board of Director's Meeting",
         "classification": BOARD,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider120",
@@ -1130,7 +1130,7 @@ spider_configs = [
         "agency": "Linwood Shopping Center Community Improvement District",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider121",
@@ -1141,7 +1141,7 @@ spider_configs = [
             "name": "Century Towers",
             "address": "635 Woodland Ave, Kansas City, MO 64124",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider122",
@@ -1149,7 +1149,7 @@ spider_configs = [
         "agency": "Main Street Rail Transportation Development District",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider123",
@@ -1160,7 +1160,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider124",
@@ -1168,7 +1168,7 @@ spider_configs = [
         "agency": "Mayor's Commission on Reparations Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider125",
@@ -1176,7 +1176,7 @@ spider_configs = [
         "agency": "Mayor's New Tools Task Force Board",
         "classification": BOARD,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider126",
@@ -1187,7 +1187,7 @@ spider_configs = [
             "name": "",
             "address": "470 NW Legacy Drive, Kansas City, MO 64155",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider127",
@@ -1198,7 +1198,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider128",
@@ -1206,7 +1206,7 @@ spider_configs = [
         "agency": "Municipal Art Commission",
         "classification": COMMISSION,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider129",
@@ -1214,7 +1214,7 @@ spider_configs = [
         "agency": "Municipal Judicial Nominating Commission",
         "classification": COMMISSION,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider130",
@@ -1225,7 +1225,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider131",
@@ -1233,7 +1233,7 @@ spider_configs = [
         "agency": "Neighborhood and Housing Joint Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider132",
@@ -1241,7 +1241,7 @@ spider_configs = [
         "agency": "Neighborhood Development and Housing Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider133",
@@ -1249,7 +1249,7 @@ spider_configs = [
         "agency": "Neighborhood Development Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider134",
@@ -1260,7 +1260,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider135",
@@ -1268,7 +1268,7 @@ spider_configs = [
         "agency": "Neighborhood Program Advisory Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider136",
@@ -1279,7 +1279,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider137",
@@ -1290,7 +1290,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider138",
@@ -1298,7 +1298,7 @@ spider_configs = [
         "agency": "Neighborhoods and Public Safety & Housing Joint Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider139",
@@ -1306,7 +1306,7 @@ spider_configs = [
         "agency": "Neighborhoods and Public Safety Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider140",
@@ -1314,7 +1314,7 @@ spider_configs = [
         "agency": "Neighborhoods, Housing & Healthy Communities Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider141",
@@ -1322,7 +1322,7 @@ spider_configs = [
         "agency": "Northland Gateway Community Improvement District",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider142",
@@ -1330,7 +1330,7 @@ spider_configs = [
         "agency": "NPD and Special Committee on Housing Policy Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider143",
@@ -1338,7 +1338,7 @@ spider_configs = [
         "agency": "Operations And Aviation",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider144",
@@ -1346,7 +1346,7 @@ spider_configs = [
         "agency": "Operations Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider145",
@@ -1354,7 +1354,7 @@ spider_configs = [
         "agency": "Parking and Transportation Commission",
         "classification": COMMISSION,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider146",
@@ -1362,7 +1362,7 @@ spider_configs = [
         "agency": "Parking Policy Review Board",
         "classification": BOARD,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider147",
@@ -1373,7 +1373,7 @@ spider_configs = [
             "name": "Parks and Recreation Administration Building",
             "address": "4600 E 63rd St, Kansas City, MO 64130",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider148",
@@ -1384,7 +1384,7 @@ spider_configs = [
             "name": "Parks and Recreation Administration Building",
             "address": "4600 E 63rd St, Kansas City, MO 64130",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider149",
@@ -1395,7 +1395,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider150",
@@ -1403,7 +1403,7 @@ spider_configs = [
         "agency": "Pension Reform Task Force Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider151",
@@ -1411,7 +1411,7 @@ spider_configs = [
         "agency": "Planning and Zoning Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider152",
@@ -1419,7 +1419,7 @@ spider_configs = [
         "agency": "Planning Zoning and Economic Development Committee and Neighborhoods and Public Safety Committee Joint Session",  # noqa
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider153",
@@ -1427,7 +1427,7 @@ spider_configs = [
         "agency": "Planning, Zoning & Economic Development Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider154",
@@ -1435,7 +1435,7 @@ spider_configs = [
         "agency": "Planning, Zoning and Economic Development -Finance, Governance and Ethics Committee",  # noqa
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider155",
@@ -1443,7 +1443,7 @@ spider_configs = [
         "agency": "Port KC",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider156",
@@ -1454,7 +1454,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider157",
@@ -1462,7 +1462,7 @@ spider_configs = [
         "agency": "Public Budget Hearings",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider158",
@@ -1470,7 +1470,7 @@ spider_configs = [
         "agency": "Public Hearing on Mast",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider159",
@@ -1478,7 +1478,7 @@ spider_configs = [
         "agency": "Public Hearing on Storm Sewer Construction Regulations and Material Specifications",  # noqa
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider160",
@@ -1486,7 +1486,7 @@ spider_configs = [
         "agency": "Public Improvement Advisory Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider161",
@@ -1497,7 +1497,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider162",
@@ -1505,7 +1505,7 @@ spider_configs = [
         "agency": "Public Safety & Emergency Services Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider163",
@@ -1513,7 +1513,7 @@ spider_configs = [
         "agency": "Public Safety and Neighborhoods Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider164",
@@ -1521,7 +1521,7 @@ spider_configs = [
         "agency": "Public Safety Group",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider165",
@@ -1529,7 +1529,7 @@ spider_configs = [
         "agency": "PZE and Transportation Joint Comittee",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider166",
@@ -1537,7 +1537,7 @@ spider_configs = [
         "agency": "PZE Committee Worksession",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider167",
@@ -1545,7 +1545,7 @@ spider_configs = [
         "agency": "Redistricting Advisory Board",
         "classification": BOARD,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider168",
@@ -1556,7 +1556,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider169",
@@ -1564,7 +1564,7 @@ spider_configs = [
         "agency": "Rules And Audit Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider170",
@@ -1572,7 +1572,7 @@ spider_configs = [
         "agency": "Sav KC",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider171",
@@ -1583,7 +1583,7 @@ spider_configs = [
             "name": "Gregg/Klice Community Center",
             "address": "1600 E 17th Terrace, Kansas City, MO 64108",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider172",
@@ -1591,7 +1591,7 @@ spider_configs = [
         "agency": "Service First Meetings",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider173",
@@ -1602,7 +1602,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider174",
@@ -1613,7 +1613,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider175",
@@ -1621,7 +1621,7 @@ spider_configs = [
         "agency": "Special Committee for Emergency Services",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider176",
@@ -1632,7 +1632,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider177",
@@ -1643,7 +1643,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider178",
@@ -1654,7 +1654,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider179",
@@ -1662,7 +1662,7 @@ spider_configs = [
         "agency": "Special Committee on Small Businesses",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider180",
@@ -1670,7 +1670,7 @@ spider_configs = [
         "agency": "Special Redistricting Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider181",
@@ -1678,7 +1678,7 @@ spider_configs = [
         "agency": "Strategic Planning Session",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider182",
@@ -1686,7 +1686,7 @@ spider_configs = [
         "agency": "Tax Increment Financing Commission",
         "classification": COMMISSION,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider183",
@@ -1694,7 +1694,7 @@ spider_configs = [
         "agency": "Tenant's Right to Counsel",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider184",
@@ -1705,7 +1705,7 @@ spider_configs = [
             "name": "",
             "address": "470 NW Legacy Drive, Kansas City, MO 64155",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider185",
@@ -1713,7 +1713,7 @@ spider_configs = [
         "agency": "Transportation & Infrastructure Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider186",
@@ -1721,7 +1721,7 @@ spider_configs = [
         "agency": "Transportation and Infrastructure & Planning, Zoning and Development Joint Committee",  # noqa
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider187",
@@ -1729,7 +1729,7 @@ spider_configs = [
         "agency": "Transportation and Infrastructure Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider188",
@@ -1737,7 +1737,7 @@ spider_configs = [
         "agency": "Transportation and Infrastructure Committee Worksession",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider189",
@@ -1745,7 +1745,7 @@ spider_configs = [
         "agency": "Transportation and Infrastructure Worksession",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider190",
@@ -1756,7 +1756,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider191",
@@ -1764,7 +1764,7 @@ spider_configs = [
         "agency": "Vine Street Community Improvement District",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider192",
@@ -1772,7 +1772,7 @@ spider_configs = [
         "agency": "Violence Free KC Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider193",
@@ -1780,7 +1780,7 @@ spider_configs = [
         "agency": "Violence Free KC Committee (VFKCC)",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider194",
@@ -1791,7 +1791,7 @@ spider_configs = [
             "name": "City Hall",
             "address": "414 E 12th St, Kansas City, MO 64106",
         },
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider195",
@@ -1799,7 +1799,7 @@ spider_configs = [
         "agency": "VisitKC",
         "classification": NOT_CLASSIFIED,
         "meeting_location": {"name": "", "address": ""},
-        "description": "{agency} meetings are also held virtually. Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "{agency} meetings are also held virtually. Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider196",
@@ -1807,7 +1807,7 @@ spider_configs = [
         "agency": "Water Utilities Advisory Board",
         "classification": BOARD,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider197",
@@ -1815,7 +1815,7 @@ spider_configs = [
         "agency": "Westport Events Management Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider198",
@@ -1823,7 +1823,7 @@ spider_configs = [
         "agency": "Worksession of the Finance & Audit Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
     {
         "class_name": "KancitSpider199",
@@ -1831,7 +1831,7 @@ spider_configs = [
         "agency": "Youth Development Committee",
         "classification": COMMITTEE,
         "meeting_location": {"name": "", "address": ""},
-        "description": "Please check the meeting attachement for details on how to attend.",  # noqa
+        "description": "Please check the meeting attachment for details on how to attend.",  # noqa
     },
 ]
 
