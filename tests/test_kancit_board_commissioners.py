@@ -27,7 +27,7 @@ freezer.stop()
 
 def test_count():
     """Test that all events are parsed."""
-    assert len(parsed_items) == 4
+    assert len(parsed_items) == 7
 
 
 def test_title():
@@ -36,6 +36,10 @@ def test_title():
     assert parsed_items[1]["title"] == "Board of Commissioners"
     assert parsed_items[2]["title"] == "Planning & Zoning and Board of Commission"
     assert parsed_items[3]["title"] == "Board of Commissioners Special Meeting"
+    # Test leading date removal (8.15.24, 10.12.23, 8/10/23)
+    assert parsed_items[4]["title"] == "Board of Commission Special Meeting"
+    assert parsed_items[5]["title"] == "Full Commission Special Session"
+    assert parsed_items[6]["title"] == "Full Commission Special Session"
 
 
 def test_description():

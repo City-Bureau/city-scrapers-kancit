@@ -79,7 +79,7 @@ class CivicClerkMixin(CityScrapersSpider):
     # Date range configuration (can be overridden by subclasses)
     # First meeting in CivicClerk API: 2015-05-04
     start_date_str = "2015-05-01"
-    months_ahead = 3
+    months_ahead = 12
 
     def start_requests(self):
         """Generate API requests for past and upcoming events."""
@@ -161,12 +161,15 @@ class CivicClerkMixin(CityScrapersSpider):
 
         Removes:
         - Any trailing parenthetical content: "Title (anything)" -> "Title"
+        - Leading dates: "8.15.24 Title" -> "Title"
         - Trailing dates: "Title 01.28.26" -> "Title"
         - Extra whitespace
         """
         title = raw_title
         # Remove any parenthetical content at end of string
         title = re.sub(r"\s*\([^)]*\)\s*$", "", title)
+        # Remove leading dates (8.15.24, 10.12.23)
+        title = re.sub(r"^\d{1,2}[./]\d{1,2}[./]\d{2,4}\s+", "", title)
         # Remove trailing dates in various formats (01.28.26, 01/28/2026, etc.)
         title = re.sub(r"\s+\d{1,2}[./]\d{1,2}[./]\d{2,4}\s*$", "", title)
         # Collapse multiple spaces to single space
