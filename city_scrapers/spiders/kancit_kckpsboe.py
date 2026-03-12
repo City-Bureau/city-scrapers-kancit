@@ -1,0 +1,265 @@
+import re
+from datetime import date, datetime, timedelta, timezone
+from urllib.parse import urlencode
+
+import scrapy
+from city_scrapers_core.constants import BOARD, COMMITTEE
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
+
+
+class KancitKckpsBoeSpider(CityScrapersSpider):
+    name = "kancit_kckps_boe"
+    agency = "Kansas City Kansas Public Schools Board of Education"
+    timezone = "America/Chicago"
+    base_url = "https://kckps.community.highbond.com"
+    meetings_api_url = f"{base_url}/Services/MeetingsService.svc/meetings"
+    link_url = f"{base_url}/Portal/MeetingInformation.aspx"
+    source_url = f"{base_url}/Portal/MeetingTypeList.aspx"
+    custom_settings = {"ROBOTSTXT_OBEY": False}
+
+    def start_requests(self):
+        """
+        Example endpoint:
+        /Services/MeetingsService.svc/meetings?from=2025-02-01&to=9999-12-31&loadall=false&_=...
+        """
+        # Fetch all meetings from July 2014 through +1 year
+        from_date = "2014-07-01"
+        to_date = (date.today() + timedelta(days=365)).isoformat()
+
+        params = {
+            "from": from_date,
+            "to": to_date,
+            "loadall": "false",
+            "_": int(datetime.now(timezone.utc).timestamp() * 1000),  # cache buster
+        }
+        url = f"{self.meetings_api_url}?{urlencode(params)}"
+        yield scrapy.Request(url=url, callback=self.parse)
+
+    def parse(self, response):
+        """
+        `parse` should always `yield` Meeting items.
+
+        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
+        needs.
+        """
+        data = response.json()
+        for item in data:
+            yield self._create_meeting(item)
+
+    def _create_meeting(self, item):
+        """Create a Meeting item with parsed data."""
+        meeting = Meeting(
+            title=self._parse_title(item),
+            description="",
+            classification=self._parse_classification(item),
+            start=self._parse_start(item),
+            end=None,
+            all_day=False,
+            time_notes=self._parse_time_notes(item),
+            location=self._parse_location(item),
+            links=self._parse_links(item),
+            source=self.source_url,
+        )
+
+        meeting["status"] = self._get_status(meeting)
+        meeting["id"] = self._get_id(meeting)
+
+        return meeting
+
+    def _get_raw_title(self, item):
+        """Get the raw meeting title from item."""
+        return item.get("Name", "").strip() or item.get("MeetingTypeName", "").strip()
+
+    def _parse_title(self, item):
+        """Parse or generate meeting title."""
+        title = self._get_raw_title(item)
+
+        # Remove time information first
+        for pattern in self.TIME_PATTERNS:
+            title = pattern.sub("", title)
+
+        title = title.replace(" - Current", "")
+
+        # Remove date from title - handle multiple patterns
+
+        # Pattern 1: Everything after the last dash
+        if " - " in title:
+            parts = title.rsplit(" - ", 1)
+            title = parts[0].strip()
+
+        # Pattern 2: Remove specific date patterns
+        for pattern in self.DATE_PATTERNS:
+            title = pattern.sub("", title)
+
+        # Normalize whitespace
+        return self.WHITESPACE_PATTERN.sub(" ", title).strip()
+
+    def _parse_classification(self, item):
+        """Parse or generate classification from allowed options."""
+        meeting_title = self._get_raw_title(item)
+
+        # Check both title and meeting type for classification
+        if "committee" in meeting_title.lower():
+            return COMMITTEE
+        return BOARD
+
+    # Default start times (hour) for meetings when API returns midnight
+    MIDNIGHT_DEFAULTS = {
+        14: ["Board Retreat"],
+        13: [
+            "Special Meeting Agenda",
+            "Special (Budget) Meeting Agenda",
+            "Special Board Meeting Agenda",
+            "Special Joint Meeting Agenda",
+            "Aug 1, 2014 (Fri)",  # Edge case: specific BoardDocs import with non-standard title format # noqa
+        ],
+        17: [
+            "Regular Meeting Agenda - Current",
+            "Regular Meeting Agenda",
+            "Regular Board Meeting Agenda",
+        ],
+    }
+
+    TIME_PATTERNS = [
+        re.compile(r"\s+at\s+\d{1,2}:\d{2}\s*(?:a\.?m\.?|p\.?m\.?)"),  # "at 4:00 PM"
+        re.compile(r"\s+\d{1,2}:\d{2}\s*(?:a\.?m\.?|p\.?m\.?)"),  # "4:00 PM"
+        re.compile(r"\s+\d{1,2}\s*(?:a\.?m\.?|p\.?m\.?)"),  # "9 AM"
+    ]
+
+    DATE_PATTERNS = [
+        re.compile(
+            r"\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{1,2},?\s+\d{4}$"  # noqa
+        ),  # "April 17, 2025"
+        re.compile(r"\s+\d{1,2}/\d{1,2}/\d{4}$"),  # "02/21/2025"
+        re.compile(r"\s+\d{4}$"),  # "2025" at end
+        re.compile(r"\s+\d{1,2},\s+\d{4}$"),  # "21, 2025"
+    ]
+
+    WHITESPACE_PATTERN = re.compile(r"\s+")
+
+    # Location constants
+    CENTRAL_OFFICE = "Kansas Public Schools"
+    ADDRESS = "2010 N. 59th Street, Kansas City, Kansas 66103"
+    BOARD_ROOM = f"{CENTRAL_OFFICE} - Third Floor Board Room"
+    EAST_WING = f"{CENTRAL_OFFICE} - Third Floor East Wing"
+
+    LOCATION_MAP = [
+        {
+            "keyword": "Board Retreat",
+            "extra": None,
+            "address": "10 E Cambridge Circle Drive #300, Kansas City, Kansas 66103",
+            "name": "McAnany Van Cleave & Phillips Law Firm",
+        },
+        {
+            "keyword": "Academic Committee Meeting",
+            "extra": None,
+            "address": ADDRESS,
+            "name": CENTRAL_OFFICE,
+        },
+        {
+            "keyword": "Finance Committee Meeting",
+            "extra": None,
+            "address": "",
+            "name": "Kansas City, Kansas Public Schools",
+        },
+        {
+            "keyword": "Facilities",
+            "extra": "Committee Meeting",
+            "address": ADDRESS,
+            "name": EAST_WING,
+        },
+        {
+            "keyword": "Boundary",
+            "extra": "Committee Meeting",
+            "address": ADDRESS,
+            "name": EAST_WING,
+        },
+        {
+            "keyword": "Special Board Meeting Agenda",
+            "extra": None,
+            "address": ADDRESS,
+            "name": BOARD_ROOM,
+        },
+        {
+            "keyword": "Special",
+            "extra": None,
+            "address": ADDRESS,
+            "name": CENTRAL_OFFICE,
+        },
+        {
+            "keyword": "Regular Board Meeting Agenda",
+            "extra": None,
+            "address": ADDRESS,
+            "name": BOARD_ROOM,
+        },
+        {
+            "keyword": "Regular Meeting Agenda",
+            "extra": None,
+            "address": ADDRESS,
+            "name": BOARD_ROOM,
+        },
+    ]
+
+    def _parse_start(self, item):
+        """Parse start datetime as a naive datetime object."""
+        datetime_str = item.get("MeetingDateTime", "")
+        if not datetime_str:
+            return None
+
+        start_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
+
+        # Apply default time if API returns midnight
+        if start_datetime.hour == 0 and start_datetime.minute == 0:
+            meeting_title = self._get_raw_title(item)
+            for hour, keywords in self.MIDNIGHT_DEFAULTS.items():
+                if any(keyword in meeting_title for keyword in keywords):
+                    start_datetime = start_datetime.replace(hour=hour, minute=0)
+                    break
+
+        return start_datetime
+
+    def _parse_time_notes(self, item):
+        """Parse any additional notes on the timing of the meeting"""
+        meeting_title = self._get_raw_title(item)
+
+        notes = ["Please check meeting attachments for accurate time and location."]
+
+        # Add virtual meeting note for Finance Committee meetings and Special meetings
+        if (
+            "Finance Committee Meeting" in meeting_title
+            or "Special Meeting Agenda" in meeting_title
+        ):
+            notes.append(
+                "You are invited to join virtually. Please check the attachments for the virtual link."  # noqa
+            )
+
+        return " ".join(notes)
+
+    def _parse_location(self, item):
+        """Parse or generate location."""
+        meeting_title = self._get_raw_title(item)
+
+        for loc in self.LOCATION_MAP:
+            if loc["keyword"] in meeting_title:
+                if loc["extra"] is None or loc["extra"] in meeting_title:
+                    return {"address": loc["address"], "name": loc["name"]}
+
+        return {"address": "", "name": item.get("MeetingLocation", "")}
+
+    def _parse_links(self, item):
+        """Parse or generate links."""
+        links = []
+        meeting_id = item.get("Id")
+        if meeting_id:
+            try:
+                validated_id = int(meeting_id)
+                links.append(
+                    {
+                        "href": f"{self.link_url}?Org=Cal&Id={validated_id}",
+                        "title": "Meeting Details",
+                    }
+                )
+            except (ValueError, TypeError):
+                pass
+        return links
