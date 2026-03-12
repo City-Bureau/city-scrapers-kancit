@@ -1,0 +1,27 @@
+[
+    {
+        "Name": {"label": "Council", "url": "https://clerk.kcmo.gov/MeetingDetail.aspx?ID=1001"},
+        "Meeting Date": "1/16/2026",
+        "Meeting Time": "9:00 AM",
+        "Meeting Location": "City Hall, 26th Floor, 414 E. 12th St., Kansas City, MO 64106",
+        "Agenda": {"label": "Agenda", "url": "https://clerk.kcmo.gov/View.ashx?M=A&ID=1001"},
+        "Minutes": {"label": "Minutes", "url": "https://clerk.kcmo.gov/View.ashx?M=M&ID=1001"},
+        "iCalendar": {"url": "https://clerk.kcmo.gov/View.ashx?M=IC&ID=1001"}
+    },
+    {
+        "Name": {"label": "Council", "url": "https://clerk.kcmo.gov/MeetingDetail.aspx?ID=1002"},
+        "Meeting Date": "1/23/2026",
+        "Meeting Time": "2:00 PM",
+        "Meeting Location": "26th Floor, Council Chamber",
+        "Agenda": {"label": "Agenda", "url": "https://clerk.kcmo.gov/View.ashx?M=A&ID=1002"},
+        "iCalendar": {"url": "https://clerk.kcmo.gov/View.ashx?M=IC&ID=1002"}
+    },
+    {
+        "Name": {"label": "Council", "url": "https://clerk.kcmo.gov/MeetingDetail.aspx?ID=1003"},
+        "Meeting Date": "1/30/2026",
+        "Meeting Time": "10:00 AM",
+        "Meeting Location": "Zoom Virtual Meeting",
+        "Agenda": {"label": "Agenda", "url": "https://clerk.kcmo.gov/View.ashx?M=A&ID=1003"},
+        "iCalendar": {"url": "https://clerk.kcmo.gov/View.ashx?M=IC&ID=1003"}
+    }
+]
