@@ -13,9 +13,6 @@ KancitCouncilSpider = kancit_missouricity.KancitSpider034
 with open(join(dirname(__file__), "files", "kancit_council.json"), "r") as f:
     test_response = json.load(f)
 
-with open(join(dirname(__file__), "files", "kancit_missouricity.html"), "r") as f:
-    test_html = f.read()
-
 spider = KancitCouncilSpider()
 
 freezer = freeze_time("2026-03-01")
@@ -36,7 +33,7 @@ def test_title():
 
 def test_description():
     assert parsed_items[0]["description"] == (
-        "Council meetings are also held virtually. Please check the meeting attachement for details on how to attend."  # noqa
+        "Council meetings are also held virtually. Please check the meeting attachment for details on how to attend."  # noqa
     )
 
 

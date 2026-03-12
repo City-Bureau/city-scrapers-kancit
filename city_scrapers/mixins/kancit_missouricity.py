@@ -11,7 +11,7 @@ class KancitMissouricityMixinMeta(type):
     """
 
     def __init__(cls, name, bases, dct):
-        required_static_vars = ["agency", "name", "agency"]
+        required_static_vars = ["agency", "name"]
         missing_vars = [var for var in required_static_vars if var not in dct]
 
         if missing_vars:
@@ -114,7 +114,7 @@ class KancitMissouricityMixin(LegistarSpider, metaclass=KancitMissouricityMixinM
                     self._scraped_urls.add(ical_url)
                 events.append(dict(data))
             except Exception:
-                pass
+                self.logger.exception(f"Failed to parse row: {row.get()}")
 
         return events
 
