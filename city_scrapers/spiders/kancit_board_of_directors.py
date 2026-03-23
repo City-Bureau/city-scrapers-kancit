@@ -1,3 +1,4 @@
+import calendar
 import html
 import json
 import re
@@ -7,6 +8,7 @@ import scrapy
 from city_scrapers_core.constants import BOARD, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+from curl_cffi import requests as curl_requests
 
 
 class KancitBoardOfDirectorsSpider(CityScrapersSpider):
@@ -16,15 +18,7 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
 
     custom_settings = {
         "ROBOTSTXT_OBEY": False,
-        "DOWNLOAD_DELAY": 3,
-        "RANDOMIZE_DOWNLOAD_DELAY": True,
-        "COOKIES_ENABLED": True,
-        # Mimics a real browser to avoid blocking
-        "DEFAULT_REQUEST_HEADERS": {
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            "Accept-Language": "en-US,en;q=0.5",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",  # noqa
-        },
+        "DOWNLOAD_DELAY": 1,
     }
 
     # Simbli eBoard scraping (main source)
@@ -32,9 +26,14 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
         "https://simbli.eboardsolutions.com/SB_Meetings/SB_MeetingListing.aspx?S=228"
     )
     api_url = "https://simbli.eboardsolutions.com/Services/api/GetMeetingListing"
-    # KCPS calendar scraping (only for upcoming meetings)
-    calendar_url = "https://www.kcpublicschools.org/fs/elements/4952"
-    calendar_base_url = "https://www.kcpublicschools.org/about/board-of-directors"
+    # KCPS calendar scraping (only for upcoming meetings for School Board and all DACs)
+    calendar_api_url = (
+        "https://thrillshare-cmsv2.services.thrillshare.com/api/v4/o/30884/cms/events"
+    )
+    calendar_base_url = (
+        "https://www.kcpublicschools.org/events?filter_ids=650065,650066&view=cal-month"
+    )
+    calendar_filter_names = {"School Board", "District Advisory Committee (DAC)"}
 
     # Set to track upcoming meeting dates from Simbli to avoid duplicates with calendar meetings # noqa
     def __init__(self, *args, **kwargs):
@@ -43,157 +42,17 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
 
     def start_requests(self):
         """
-        Requests the Simbli main page for token extraction.
+        Fetch main page with curl_cffi to bypass Incapsula fingerprinting.
         """
-        yield scrapy.Request(
-            url=self.main_url,
-            callback=self.parse,
+        response = curl_requests.get(
+            self.main_url,
+            impersonate="chrome120",
         )
-
-    def fetch_calendar_meetings(self):
-        """
-        Fetch upcoming meetings from the calendar AJAX endpoint for the current and next 5 months. # noqa
-        Builds a URL for the KCPS calendar AJAX endpoint.
-        Adds a random timestamp to the URL to prevent caching.
-        Yields requests to the calendar AJAX endpoint.
-        """
-        today = datetime.now()
-
-        for i in range(6):
-            target_month = today.month + i
-            target_year = today.year
-
-            while target_month > 12:
-                target_month -= 12
-                target_year += 1
-
-            cal_date = f"{target_year}-{target_month:02d}-01"
-            params = {
-                "cal_date": cal_date,
-                "is_draft": "false",
-                "is_load_more": "true",
-                "page_id": "338",
-                "parent_id": "4952",
-                # Add a random timestamp to the URL to prevent caching
-                "_": str(int(datetime.now().timestamp() * 1000) + i),
-            }
-
-            url = f"{self.calendar_url}?" + "&".join(
-                [f"{k}={v}" for k, v in params.items()]
+        if not response or len(response.text) < 10000:
+            self.logger.warning(
+                f"Unexpected response from {self.main_url}: "
+                f"status={response.status_code if response else 'no response'}, "
             )
-
-            yield scrapy.Request(
-                url=url,
-                callback=self.parse_calendar_response,
-                headers={
-                    "Accept": "*/*",
-                    "X-Requested-With": "XMLHttpRequest",
-                    "Referer": self.calendar_base_url,
-                },
-                meta={"cal_date": cal_date},
-                dont_filter=True,
-            )
-
-    def parse_calendar_response(self, response):
-        """
-        Parse the calendar AJAX response.
-        Extracts meeting information from the calendar response HTML returned by the calendar AJAX endpoint. # noqa
-        Loops through each day with events and extracts meeting elements.
-        """
-        event_days = response.css(".fsCalendarDaybox.fsStateHasEvents")
-
-        for day_elem in event_days:
-            events = day_elem.css(".fsCalendarInfo")
-            for event_elem in events:
-                meeting = self.parse_calendar_meeting(event_elem, day_elem)
-                if meeting:
-                    yield meeting
-
-    def parse_calendar_meeting(self, event_elem, day_elem):
-        """Parse individual meeting from calendar HTML"""
-        title = event_elem.css("a.fsCalendarEventTitle::text").get()
-        if not title:
-            return None
-
-        normalized_title = self._normalize_title(title.strip())
-        start = self._parse_calendar_datetime(event_elem, day_elem)
-
-        if not start:
-            return None
-
-        # Skip if this date already has passed (only consider upcoming)
-        if start.date() < datetime.now().date():
-            return None
-
-        # Skip if this date already exists on Simbli
-        if start.date() in self.simbli_upcoming_dates:
-            return None
-
-        location_text = event_elem.css(".fsLocation::text").get()
-        location_name = location_text.strip() if location_text else ""
-
-        # Set address for Board of Education
-        if location_name == "Board of Education":
-            location_address = "2901 Troost Ave, Kansas City, MO 64109"
-
-        else:
-            location_address = ""
-
-        location = {
-            "name": location_name,
-            "address": location_address,
-        }
-
-        return self._create_meeting(
-            title=normalized_title,
-            start=start,
-            location=location,
-            links=[{"href": "", "title": ""}],
-            source=self.calendar_base_url,
-        )
-
-    def _parse_calendar_datetime(self, event_elem, day_elem):
-        """Parse datetime from calendar event"""
-
-        time_elem = event_elem.css("time.fsStartTime")
-        datetime_str = time_elem.attrib.get("datetime") if time_elem else None
-
-        if datetime_str:
-            return self._parse_iso_datetime(datetime_str)
-
-        # Fallback: construct date from data attributes
-        date_elem = day_elem.css(".fsCalendarDate")
-        day = date_elem.attrib.get("data-day")
-        month = date_elem.attrib.get("data-month")
-        year = date_elem.attrib.get("data-year")
-
-        if day and month and year:
-            try:
-                return datetime(int(year), int(month), int(day))
-            except (ValueError, TypeError):
-                return None
-
-        return None
-
-    def _parse_iso_datetime(self, datetime_str):
-        """Parse ISO 8601 datetime string with timezone"""
-        # Format: "2026-04-08T18:45:00-05:00"
-        # Extract datetime part without timezone using regex
-        match = re.match(r"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})", datetime_str)
-        if match:
-            try:
-                return datetime.fromisoformat(match.group(1))
-            except ValueError:
-                return None
-        return None
-
-    def parse(self, response):
-        """
-        Main parser for Simbli page.
-        Extract connection tokens from HTML using regex and start fetching meetings from API # noqa
-        """
-        # Skip if HTML is too short, likely an error page or blocked response
-        if len(response.text) < 10000:
             return
 
         connection_string = self._extract_token(
@@ -212,6 +71,111 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
 
         if connection_string and security_token:
             yield from self._fetch_meetings_page(0, connection_string, security_token)
+        else:
+            self.logger.warning(f"Failed to extract tokens from {self.main_url}")
+
+    def fetch_calendar_meetings(self):
+        """Fetch upcoming meetings from Thrillshare calendar API."""
+        today = datetime.now()
+
+        for i in range(13):  # current month + 12 months ahead
+            month = (today.month + i - 1) % 12 + 1
+            year = today.year + (today.month + i - 1) // 12
+            start_date = f"{year}-{month:02d}-01"
+            last_day = calendar.monthrange(year, month)[1]
+            end_date = f"{year}-{month:02d}-{last_day}"
+
+            url = (
+                f"{self.calendar_api_url}"
+                f"?start_date={start_date}&end_date={end_date}"
+                f"&section_ids=514507&paginate=false&locale=en"
+            )
+
+            yield scrapy.Request(
+                url=url,
+                callback=self.parse_calendar_response,
+                headers={"accept": "application/json"},
+                dont_filter=True,
+            )
+
+    def parse_calendar_response(self, response):
+        """Parse Thrillshare calendar API response."""
+        try:
+            data = response.json()
+        except Exception:
+            self.logger.warning(f"Failed to parse calendar response: {response.url}")
+            return
+
+        for event in data.get("events", []):
+            # Filter only board-related meetings
+            filter_names = set(event.get("filter_name", []))
+            if not filter_names & self.calendar_filter_names:
+                continue
+
+            meeting = self._parse_calendar_meeting(event)
+            if meeting:
+                yield meeting
+
+    def _parse_calendar_meeting(self, event):
+        """Parse individual meeting from Thrillshare API event."""
+        title = event.get("title", "").strip()
+        if not title:
+            return None
+
+        start = self._parse_calendar_datetime(event.get("start_at"))
+        if not start:
+            return None
+
+        filter_names = set(event.get("filter_name", []))
+        is_dac = "District Advisory Committee (DAC)" in filter_names
+        is_past = start.date() < datetime.now().date()
+
+        # DAC: allow past from March 2026 onward
+        # School Board: only upcoming
+        if is_past and not is_dac:
+            return None
+        if is_dac and start < datetime(2026, 3, 1):
+            return None
+
+        # Skip if already in Simbli
+        if start.date() in self.simbli_upcoming_dates:
+            return None
+
+        address = event.get("address", "").strip()
+        location = self._parse_calendar_location(address)
+
+        return self._create_meeting(
+            title=self._normalize_title(title),
+            start=start,
+            location=location,
+            links=[{"href": "", "title": ""}],
+            source=self.calendar_base_url,
+        )
+
+    def _parse_calendar_datetime(self, datetime_str):
+        """Parse ISO 8601 datetime string from Thrillshare API."""
+        if not datetime_str:
+            return None
+        # Format: "2026-03-03T08:00:00.000-06:00"
+        match = re.match(r"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})", datetime_str)
+        if match:
+            try:
+                return datetime.fromisoformat(match.group(1))
+            except ValueError:
+                return None
+        return None
+
+    def _parse_calendar_location(self, address):
+        """Parse location from Thrillshare address string."""
+        if "2901 Troost" in address:
+            return {
+                "name": "Board of Education",
+                "address": "2901 Troost Ave, Kansas City, MO 64109",
+            }
+        return {
+            "name": "",
+            "address": address,
+        }
 
     def _extract_token(self, html, patterns):
         """Extract token from HTML using regex patterns"""
@@ -219,6 +183,7 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
             match = re.search(pattern, html)
             if match:
                 return match.group(1)
+
         return None
 
     def _fetch_meetings_page(self, record_start, connection_string, security_token):
@@ -302,6 +267,9 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
                 )
 
         except json.JSONDecodeError:
+            self.logger.warning(
+                f"Failed to parse JSON response from {response.url}: {response.text[:200]}"  # noqa
+            )
             pass
 
     def _parse_simbli_meeting(self, meeting_data):
@@ -376,7 +344,7 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
         """Classify meeting based on title keywords"""
         title_lower = title.lower()
 
-        if "committee" in title_lower:
+        if "committee" in title_lower or "dac" in title_lower:
             return COMMITTEE
         elif (
             "board" in title_lower
@@ -397,6 +365,9 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
             try:
                 return datetime.strptime(date_str, fmt)
             except ValueError:
+                self.logger.debug(
+                    f"Could not parse date string '{date_str}' with format '{fmt}'"
+                )
                 continue
 
         return None

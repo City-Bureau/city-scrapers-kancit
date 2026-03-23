@@ -20,10 +20,10 @@ from city_scrapers.spiders.kancit_board_of_directors import KancitBoardOfDirecto
 # FIXTURES - Reusable test setup
 @pytest.fixture
 def test_calendar_response():
-    """Load calendar HTML response"""
+    """Load Thrillshare calendar JSON response"""
     return file_response(
-        join(dirname(__file__), "files", "kancit_board_of_directors.html"),
-        url="https://www.kcpublicschools.org/fs/elements/4952?cal_date=2026-01-01&is_draft=false&is_load_more=true&page_id=338&parent_id=4952&_=1234567890",  # noqa
+        join(dirname(__file__), "files", "kancit_board_of_directors_calendar.json"),
+        url="https://thrillshare-cmsv2.services.thrillshare.com/api/v4/o/30884/cms/events",  # noqa
     )
 
 
@@ -50,25 +50,26 @@ def test_api_response():
 @pytest.fixture
 def spider():
     """Create spider instance within frozen time"""
-    with freeze_time("2026-01-10"):
+    with freeze_time("2026-03-01"):
         return KancitBoardOfDirectorsSpider()
 
 
 @pytest.fixture
-def parsed_calendar_items(spider, test_calendar_response):
-    """Parse calendar meetings within frozen time"""
-    with freeze_time("2026-01-10"):
-        items = []
-        for item in spider.parse_calendar_response(test_calendar_response):
-            if isinstance(item, Meeting):
-                items.append(item)
-        return items
+def parsed_calendar_items(spider, test_api_response, test_calendar_response):
+    with freeze_time("2026-03-01"):
+        # Run API first to populate simbli_upcoming_dates
+        list(spider.parse_api_response(test_api_response))
+        return [
+            item
+            for item in spider.parse_calendar_response(test_calendar_response)
+            if isinstance(item, Meeting)
+        ]
 
 
 @pytest.fixture
 def parsed_api_items(spider, test_api_response):
     """Parse API meetings within frozen time"""
-    with freeze_time("2026-01-10"):
+    with freeze_time("2026-03-01"):
         items = []
         for item in spider.parse_api_response(test_api_response):
             if isinstance(item, Meeting):
@@ -77,26 +78,32 @@ def parsed_api_items(spider, test_api_response):
 
 
 @pytest.fixture
-def parsed_items(parsed_calendar_items, parsed_api_items):
-    """Combined calendar and API items"""
-    return parsed_calendar_items + parsed_api_items
+def parsed_items(spider, test_api_response, test_calendar_response):
+    with freeze_time("2026-03-01"):
+        api_items = [
+            item
+            for item in spider.parse_api_response(test_api_response)
+            if isinstance(item, Meeting)
+        ]
+        calendar_items = [
+            item
+            for item in spider.parse_calendar_response(test_calendar_response)
+            if isinstance(item, Meeting)
+        ]
+        return api_items + calendar_items
 
 
 # CALENDAR-BASED MEETING TESTS
 def test_calendar_meeting_count(parsed_calendar_items):
-    """Test that we parsed expected calendar meetings"""
-    assert len(parsed_calendar_items) == 4
+    assert len(parsed_calendar_items) == 1
 
 
 def test_calendar_first_meeting(parsed_calendar_items):
-    """Test first calendar meeting - Jan 14 Policy Monitoring"""
     if len(parsed_calendar_items) == 0:
         pytest.skip("No calendar meetings parsed")
-
     item = parsed_calendar_items[0]
-    assert "Policy Monitoring" in item["title"]
-    assert item["start"] == datetime(2026, 1, 14, 18, 45)
-    assert item["classification"] == BOARD
+    assert item["title"] == "DAC Meeting"
+    assert item["start"] == datetime(2026, 3, 11, 18, 0)
 
 
 def test_calendar_committee_meetings(parsed_calendar_items):
@@ -104,17 +111,16 @@ def test_calendar_committee_meetings(parsed_calendar_items):
     committee_meetings = [
         m for m in parsed_calendar_items if m["classification"] == COMMITTEE
     ]
-    assert len(committee_meetings) == 2
+    assert len(committee_meetings) == 1
 
 
 def test_calendar_locations(parsed_calendar_items):
     """Test calendar location parsing"""
-    jan_20_meetings = [m for m in parsed_calendar_items if m["start"].day == 20]
-    if jan_20_meetings:
-        assert (
-            "Board of Education" in jan_20_meetings[0]["location"]["name"]
-            or "Seven Oaks" in jan_20_meetings[0]["location"]["name"]
-        )
+    assert parsed_calendar_items[0]["location"]["name"] == "Board of Education"
+    assert (
+        parsed_calendar_items[0]["location"]["address"]
+        == "2901 Troost Ave, Kansas City, MO 64109"
+    )
 
 
 def test_calendar_meeting_structure(parsed_calendar_items):
@@ -132,7 +138,7 @@ def test_calendar_meeting_structure(parsed_calendar_items):
 # API-BASED MEETING TESTS
 def test_api_meeting_count(parsed_api_items):
     """Test that we parsed expected API meetings"""
-    assert len(parsed_api_items) == 3
+    assert len(parsed_api_items) == 4
 
 
 def test_api_first_item(parsed_api_items):
@@ -172,7 +178,7 @@ def test_api_third_item(parsed_api_items):
 
     item = parsed_api_items[2]
     assert "Committee" in item["title"]
-    assert item["start"] == datetime(2026, 1, 20, 8, 0)
+    assert item["start"] == datetime(2026, 3, 3, 8, 0)
     assert item["classification"] == COMMITTEE
 
 
@@ -223,8 +229,8 @@ def test_title_removes_cancelled_parentheses(spider):
 def test_title_decodes_html_entities(spider):
     """Test that HTML entities are decoded"""
     assert (
-        spider._normalize_title("Finance &amp; Budget Committee")
-        == "Finance & Budget Committee"
+        spider._normalize_title("Buisness Meeting &amp; Budget Hearing")
+        == "Buisness Meeting & Budget Hearing"
     )
 
 
@@ -339,15 +345,14 @@ def test_location_hybrid(spider):
 
 
 # DATETIME PARSING TESTS
-def test_iso_datetime_parsing(spider):
-    """Test ISO 8601 datetime parsing"""
+def test_calendar_datetime_parsing(spider):
+    """Test ISO 8601 datetime parsing from Thrillshare API."""
     test_cases = [
-        ("2026-01-14T17:30:00", datetime(2026, 1, 14, 17, 30)),
-        ("2026-01-22T09:30:00", datetime(2026, 1, 22, 9, 30)),
+        ("2026-01-14T17:30:00.000-06:00", datetime(2026, 1, 14, 17, 30)),
+        ("2026-01-22T09:30:00.000-06:00", datetime(2026, 1, 22, 9, 30)),
     ]
-
     for dt_str, expected in test_cases:
-        result = spider._parse_iso_datetime(dt_str)
+        result = spider._parse_calendar_datetime(dt_str)
         assert result == expected, f"Failed parsing {dt_str}"
 
 
@@ -362,7 +367,7 @@ def test_title(parsed_items):
 def test_description(parsed_items):
     """Test all meetings have description field"""
     for item in parsed_items:
-        assert isinstance(item["description"], str)
+        assert item["description"] == ""
 
 
 def test_start(parsed_items):
@@ -380,7 +385,10 @@ def test_end(parsed_items):
 def test_time_notes(parsed_items):
     """Test all meetings have time_notes field"""
     for item in parsed_items:
-        assert isinstance(item["time_notes"], str)
+        assert (
+            item["time_notes"]
+            == "Please refer to the meeting attachments for more accurate information about the meeting details, address and time"  # noqa
+        )
 
 
 def test_id_and_status(parsed_items):
@@ -437,22 +445,18 @@ def test_meeting_has_valid_year(parsed_items):
 
 
 def test_calendar_meetings_are_upcoming(parsed_calendar_items):
-    """Test that calendar meetings were parsed as upcoming (frozen to Jan 10)"""
+    """Only DAC meetings come through calendar, all from March 2026 onward."""
     for item in parsed_calendar_items:
-        # All meetings should be on or after Jan 14, 2026
-        assert item["start"].date() >= datetime(2026, 1, 14).date()
+        assert item["start"] >= datetime(2026, 3, 1)
 
 
 def test_past_meetings_marked_correctly(parsed_items):
-    """Test that meetings before Jan 10 are marked as passed"""
-    # Dec 9 meeting should be marked as passed
     for item in parsed_items:
-        if item["start"] < datetime(2026, 1, 10):
+        if item["start"] < datetime(2026, 3, 1):
             assert item["status"] == PASSED
 
 
 def test_future_meetings_marked_correctly(parsed_items):
-    """Test that meetings after Jan 10 are marked as tentative"""
     for item in parsed_items:
-        if item["start"] >= datetime(2026, 1, 10):
+        if item["start"] >= datetime(2026, 3, 1):
             assert item["status"] == TENTATIVE
