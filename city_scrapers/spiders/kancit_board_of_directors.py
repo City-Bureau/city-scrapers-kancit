@@ -31,7 +31,7 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
         "https://thrillshare-cmsv2.services.thrillshare.com/api/v4/o/30884/cms/events"
     )
     calendar_base_url = (
-        "https://www.kcpublicschools.org/events?filter_ids=650065,650066&view=cal-month"
+        "https://www.kcpublicschools.org/events?filter_ids=650065,650066"
     )
     calendar_filter_names = {"School Board", "District Advisory Committee (DAC)"}
 
@@ -102,7 +102,7 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
         """Parse Thrillshare calendar API response."""
         try:
             data = response.json()
-        except Exception:
+        except json.JSONDecodeError:
             self.logger.warning(f"Failed to parse calendar response: {response.url}")
             return
 
@@ -118,6 +118,7 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
 
     def _parse_calendar_meeting(self, event):
         """Parse individual meeting from Thrillshare API event."""
+
         title = event.get("title", "").strip()
         if not title:
             return None
@@ -149,7 +150,7 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
             start=start,
             location=location,
             links=[{"href": "", "title": ""}],
-            source=self.calendar_base_url,
+            source=self._parse_source_calendar_url(event),
         )
 
     def _parse_calendar_datetime(self, datetime_str):
@@ -176,6 +177,12 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
             "name": "",
             "address": address,
         }
+
+    def _parse_source_calendar_url(self, event):
+        event_id = event.get("id")
+        if not event_id:
+            return self.calendar_base_url
+        return f"{self.calendar_base_url}&id={event_id}"
 
     def _extract_token(self, html, patterns):
         """Extract token from HTML using regex patterns"""
@@ -270,7 +277,7 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
             self.logger.warning(
                 f"Failed to parse JSON response from {response.url}: {response.text[:200]}"  # noqa
             )
-            pass
+            return
 
     def _parse_simbli_meeting(self, meeting_data):
         """
@@ -307,7 +314,7 @@ class KancitBoardOfDirectorsSpider(CityScrapersSpider):
             start=start,
             end=None,
             all_day=False,
-            time_notes="Please refer to the meeting attachments for more accurate information about the meeting details, address and time",  # noqa
+            time_notes="Please refer to the meeting attachment or source for more accurate information about the meeting details, address and time",  # noqa
             location=location,
             links=links,
             source=source,

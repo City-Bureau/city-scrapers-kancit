@@ -387,7 +387,7 @@ def test_time_notes(parsed_items):
     for item in parsed_items:
         assert (
             item["time_notes"]
-            == "Please refer to the meeting attachments for more accurate information about the meeting details, address and time"  # noqa
+            == "Please refer to the meeting attachment or source for more accurate information about the meeting details, address and time"  # noqa
         )
 
 
